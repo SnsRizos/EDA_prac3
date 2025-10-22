@@ -6,7 +6,7 @@
 
  /*El TAD GENERICO  colecInterdep su dominio de valores  seran de datos booleanos(bool) y datos naturales(int),además el parametro de tipo T tendra que tener  definidas las operaciones igual y anterior
 
-
+  
  */
 
 template<typename I,typename V> struct colecInterdep;
