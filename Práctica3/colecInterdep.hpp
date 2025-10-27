@@ -403,7 +403,7 @@ I obtenerSupervisor(const I& id, colecInterdep<I,V>& c){
 			pAux = pAux -> sig;
 		}
 		if(pAux!=nullptr && pAux -> ident == id){
-			return pAux -> dep -> ident;
+			return pAux ->dep->ident;
 		}		
 	}
 }
