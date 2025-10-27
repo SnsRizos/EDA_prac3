@@ -257,39 +257,48 @@ void anyadirIndependiente(colecInterdep<I,V>& c, const I& id, const V& v){
 
 template<typename I,typename V>
 void anyadirDependiente(colecInterdep<I,V>& c, const I& id, const V& v, const I& super){
-	if(existe(super, c) && !existe(id, c)){
-		typename colecInterdep<I,V>::Celda* pSup = c.prim;
-		while(pSup -> ident != super){
-			pSup = pSup -> sig;
-		}
-		pSup -> numDepend = pSup -> numDepend+1;	//Sumar depend de super
-		
+	if(!esVacia(c)){	
 		if(c.prim -> ident > id){	//anyadir al principio
-			typename colecInterdep<I,V>::Celda* pAux = c.prim;
-			c.prim = new typename colecInterdep<I,V>::Celda;
-			c.prim -> ident = id;
-			c.prim -> valor = v;
-			c.prim -> dep = pSup;
-			c.prim -> numDepend = 0;
-			c.prim -> sig = pAux;
-			c.tam++;
+			typename colecInterdep<I,V>::Celda* pSup = c.prim;
+			while(pSup != nullptr && pSup -> ident < super){
+				pSup = pSup -> sig;
+			}
+
+			if(pSup != nullptr && pSup -> ident == super){		//Si existe super
+				pSup -> numDepend = pSup -> numDepend+1;	//Sumar depend de super
+
+				typename colecInterdep<I,V>::Celda* pAux = c.prim;
+				c.prim = new typename colecInterdep<I,V>::Celda;
+				c.prim -> ident = id;
+				c.prim -> valor = v;
+				c.prim -> dep = pSup;
+				c.prim -> numDepend = 0;
+				c.prim -> sig = pAux;
+				c.tam++;
+			}
 		}
-		else{		//general (entre 2 interdep o al final)
+
+		else if(c.prim -> ident != id){		//general (entre 2 interdep o al final)
 			typename colecInterdep<I,V>::Celda* pAux = c.prim;
+			typename colecInterdep<I,V>::Celda* pSup = c.prim;
 			while(pAux -> sig != nullptr && (pAux -> sig -> ident < id)){
 				pAux = pAux -> sig;
 			}
-			
-			typename colecInterdep<I,V>::Celda* pNuevo;
-			pNuevo = new typename colecInterdep<I,V>::Celda;
-			pNuevo -> ident = id;
-			pNuevo -> valor = v;
-			pNuevo -> dep = pSup;
-			pNuevo -> numDepend = 0;
-			pNuevo -> sig = pAux -> sig;
-			pAux -> sig = pNuevo;
-			c.tam++;		
-			
+			while(pSup != nullptr && pSup -> ident < super){
+				pSup = pSup -> sig;
+			}
+				
+			if((pAux->sig == nullptr || pAux -> sig -> ident != id) && (pSup != nullptr && pSup -> ident == super)){ //Si no existe id y existe super
+				typename colecInterdep<I,V>::Celda* pNuevo;
+				pNuevo = new typename colecInterdep<I,V>::Celda;
+				pNuevo -> ident = id;
+				pNuevo -> valor = v;
+				pNuevo -> dep = pSup;
+				pNuevo -> numDepend = 0;
+				pNuevo -> sig = pAux -> sig;
+				pAux -> sig = pNuevo;
+				c.tam++;		
+			}
 		}
 	}	
 }
