@@ -311,25 +311,23 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 
 	if( id!=super){
 		typename colecInterdep<I,V>::Celda* pSuper = c.prim;
-		bool encontrado = false;
-   		while (pSuper != nullptr && pSuper ->ident < super ){
- 			pSuper = pSuper->sig;
-			 
-		}
-		if(pSuper->ident == super){
-			encontrado=true;
-		}
-		if(encontrado){
-
-			typename colecInterdep<I,V>::Celda* pId = c.prim;
-			encontrado = false;
-   			while (pId!= nullptr && pId ->ident < id ){
- 				pId = pId->sig;
+		typename colecInterdep<I,V>::Celda* pId = c.prim;
+		bool encontradoS = false;
+		bool encontradoId = false;
+   		while ( (!encontradoS || !encontradoId) || (pSuper != nullptr && pId != nullptr) ) {
+			if(pSuper->ident == super){
+				encontradoS=true;
+			}else{
+				pSuper = pSuper->sig;
 			}
-			if(pId->ident == id){
-				encontrado=true;
-			} 
-			if(encontrado){	
+			if(pId ->ident == id ){
+				encontradoId=true;
+			}else{
+				pId = pId->sig;
+			}
+		}
+	
+		if(encontradoS && encontradoId){
 				pSuper->numDepend++;
 				if(pId->dep != nullptr){
 					pId->dep->numDepend--;
@@ -343,7 +341,6 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 
 	}
 
-}
 
 
 
