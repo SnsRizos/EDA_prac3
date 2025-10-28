@@ -80,7 +80,7 @@ template<typename I,typename V> void avanza(colecInterdep<I,V>& c);
 template<typename I,typename V>
 struct colecInterdep{
     	friend void crear<I,V>(colecInterdep<I,V>& c);
-    	friend bool tamanyo<I,V>(colecInterdep<I,V>& c);
+    	friend int tamanyo<I,V>(colecInterdep<I,V>& c);
     	friend bool esVacia<I,V>(colecInterdep<I,V>& c);
     	friend bool existe<I,V>(const I& id, colecInterdep<I,V>& c);
     	friend bool existeDependiente<I,V>(const I& id, colecInterdep<I,V>& c);

@@ -2,6 +2,7 @@
 #include "evento.hpp"
 
 #include <iostream>
+#include <string>
 
 
 int main(){
@@ -11,6 +12,15 @@ int main(){
 	cout << dato << endl;
 	cambiarDescripcion(e1,"yets");
 	dato = descripcion(e1);
-	cout << dato << endl;
+	cout << dato << "\n\n";
+	string id1 = "aaa";
 	
+	colecInterdep<string,evento> bolsa;
+	crear(bolsa);
+	if(esVacia(bolsa)){
+		cout << "yets\n";
+	}
+	cout << tamanyo(bolsa) << endl;
+	anyadirIndependiente(bolsa,id1,e1);
+	cout << tamanyo(bolsa) << endl;
 }
