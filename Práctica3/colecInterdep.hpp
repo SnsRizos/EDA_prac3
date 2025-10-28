@@ -314,17 +314,17 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 		typename colecInterdep<I,V>::Celda* pId = c.prim;
 		bool encontradoS = false;
 		bool encontradoId = false;
-   		while ( (!encontradoS || !encontradoId) || (pSuper != nullptr && pId != nullptr) ) {
+   		while ( (!encontradoS || !encontradoId) || (pSuper != nullptr) ) {
+			if(pSuper->ident == id ){
+				encontradoId=true;
+				typename colecInterdep<I,V>::Celda* pId = pSuper;
+			}
 			if(pSuper->ident == super){
 				encontradoS=true;
 			}else{
 				pSuper = pSuper->sig;
 			}
-			if(pId ->ident == id ){
-				encontradoId=true;
-			}else{
-				pId = pId->sig;
-			}
+			
 		}
 	
 		if(encontradoS && encontradoId){
