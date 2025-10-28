@@ -310,20 +310,21 @@ template<typename I,typename V>
 void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 
 	if( id!=super){
-		typename colecInterdep<I,V>::Celda* pSuper = c.prim;
-		typename colecInterdep<I,V>::Celda* pId = c.prim;
+		typename colecInterdep<I,V>::Celda* pAux = c.prim;
+		
 		bool encontradoS = false;
 		bool encontradoId = false;
-   		while ( (!encontradoS || !encontradoId) || (pSuper != nullptr) ) {
-			if(pSuper->ident == id ){
+   		while ( (!encontradoS || !encontradoId) || (pAux != nullptr) ) {
+			if(pAux->ident == id ){
 				encontradoId=true;
-				typename colecInterdep<I,V>::Celda* pId = pSuper;
+				typename colecInterdep<I,V>::Celda* pId = pAux;
 			}
-			if(pSuper->ident == super){
+			else if(pAux->ident == super){
 				encontradoS=true;
-			}else{
-				pSuper = pSuper->sig;
+				typename colecInterdep<I,V>::Celda* pSuper = pAux;
 			}
+			pAux = pSuper->sig;
+			
 			
 		}
 	
