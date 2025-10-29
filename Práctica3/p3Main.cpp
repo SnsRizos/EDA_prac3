@@ -1,8 +1,89 @@
+/* Mijayl Mandzyak Melnyk 935521 Hector Manzano Miranda 926092*/
 #include "colecInterdep.hpp"
 #include "evento.hpp"
 
 #include <iostream>
 #include <string>
+
+using namespace std;
+
+
+void leerInstrucciones(const string fichero,evento& v,){
+	ifstream f;
+	f.open("entrada.txt");
+
+	if(f.is_open()){
+		string instruccion,salto;
+		string ident;
+		while(f >> instruccion){
+			getline(f,salto);
+			
+			if(instruccion == "A"){//AÑADE UN NUEVO ID A LA MEMORIA
+
+				f >> Celda.I; //HAY QUE CAMBIARLO
+				getline(f,salto);
+				f >> Celda.valor.descrip; //HAY QUE CAMBIARLO
+				getline(f,salto);
+				f >> Celda.valor.prio; //HAY QUE CAMBIARLO
+				getline(f,salto);
+				f >> Dependencia; //Posiblemente
+				getline(f,salto);
+				f >> id;//Sera un string que si es Dependiente tendra que 						hacer un atoi
+				getline(f,salto);
+				if(Dependencia == "DEPendiente"){ 
+					hacerDependiente() //rellenar con variable
+				}else{
+					Celda->dep = nullptr;
+					
+				}
+				 //CAPAZ QUE HAY QUE AÑADIR MUCHO MAS
+			}else if( instruccion == "C"){ // CAMBIA EL VALOR DEL ID QUE NOS DA 
+				//MODO DE PRUEBA
+				valor nuevo;
+				f >> ident;
+				getline(f,salto);
+				f >> nuevo.descrip;
+				getline(f,salto);
+				f >> nuevo.prio;
+				getline(f,salto);
+				actualizarVal() // HAY QUE AÑADIR VARIABLES
+
+			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION DE ESE ID
+				f >> ident;
+				getline(f,salto);
+				//POSIBLEMENTE RELLENAR CON MAS COSAS	
+			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
+				f >> ident;
+				getline(f,salto);
+				existe(ident); //HAY QUE AÑADIR VARIABLES
+
+			}else if(instruccion =="I"){//HACE INDEPENDIENTE A ESE IDENT
+				f >> ident;
+				getline(f,salto);
+				hacerIndependiente(ident);//HAY QUE AÑADIR VARIABLES
+
+			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE NUEVO
+				f >> ident;
+				getline(f,salto);
+				string nuevo;
+				f >> nuevo;
+				getline(f,salto);
+				hacerDependiente(,ident,nuevo);//HAY QUE AÑADIR VARIABLES
+			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
+				f >> ident;
+				getline(f,salto);
+				borrar(ident);//HAY QUE AÑADIR VARIABLES
+			}else if ( instruccion == "LD"){
+				f >> ident ;
+				
+			}
+
+		}
+
+	}
+
+}
+
 
 
 int main(){
