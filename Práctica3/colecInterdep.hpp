@@ -5,7 +5,7 @@
 // PREDECLARACION DEL TAD GENERICO colecInterdep (inicio INTERFAZ)
 
  /*El TAD GENERICO  colecInterdep su dominio de valores  seran de datos booleanos(bool) y datos naturales(int),además el parametro de tipo T tendra que tener  definidas las operaciones igual y anterior
-
+  //recordar al usuario que cualquier variable tipo I, tiene que tener las operaciones de comparacion de cpp
   
  */
 
@@ -79,11 +79,11 @@ template<typename I,typename V> void avanza(colecInterdep<I,V>& c);
 
 template<typename I,typename V>
 struct colecInterdep{
-    	friend void crear<I,V>(colecInterdep<I,V>& c);
-    	friend int tamanyo<I,V>(colecInterdep<I,V>& c);
-    	friend bool esVacia<I,V>(colecInterdep<I,V>& c);
-    	friend bool existe<I,V>(const I& id, colecInterdep<I,V>& c);
-    	friend bool existeDependiente<I,V>(const I& id, colecInterdep<I,V>& c);
+	friend void crear<I,V>(colecInterdep<I,V>& c);
+	friend int tamanyo<I,V>(colecInterdep<I,V>& c);
+	friend bool esVacia<I,V>(colecInterdep<I,V>& c);
+	friend bool existe<I,V>(const I& id, colecInterdep<I,V>& c);
+	friend bool existeDependiente<I,V>(const I& id, colecInterdep<I,V>& c);
 	friend bool existeIndependiente<I,V>(const I& id, colecInterdep<I,V>& c);
 	friend void anyadirIndependiente<I,V>(colecInterdep<I,V>& c, const I& id,const V& v);
 	friend void anyadirDependiente<I,V>(colecInterdep<I,V>& c, const I& id, const V& v, const I& super);
@@ -162,12 +162,13 @@ bool existe(const I& id, colecInterdep<I,V>& c){
 
     if (pAux == nullptr) {
       	return false;
-    } else {
+    } 
+	else{
         if (pAux-> ident == id) {
           
             return true;
 
-	} else {
+		} else {
 
             return false;
 
@@ -332,18 +333,18 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 		}
 	
 		if(encontradoS && encontradoId){
-				pSuper->numDepend++;
-				if(pId->dep != nullptr){
-					pId->dep->numDepend--;
-				}
-				pId->dep = pSuper;
+			pSuper->numDepend++;
+			if(pId->dep != nullptr){
+				pId->dep->numDepend--;
+			}
+			pId->dep = pSuper;
 
 		
-			}	
+		}	
 	
-		}
-
 	}
+
+}
 
 
 
@@ -351,19 +352,15 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 template<typename I,typename V>
 void hacerIndependiente(colecInterdep<I,V>& c, const I& id){
 	typename colecInterdep<I,V>::Celda* pId = c.prim;
-	bool encontrado = false;
    	while (pId != nullptr && pId ->ident < id ){
  		pId = pId->sig;
 	}
-	if(pId->ident == id){
-		encontrado=true;
-	} 
-	if(encontrado){
+	if(pId != nullptr && pId->ident == id){
 		if(pId->dep!=nullptr){
 			pId->dep->numDepend--;
 			pId->dep=nullptr;
 		}
-	}
+	} 
 }
 
 
@@ -385,15 +382,13 @@ void actualizarVal(colecInterdep<I,V>& c, const I& id, const V& nuevo){
 
 
 template<typename I,typename V>
-V obtenerVal(const I& id, colecInterdep<I,V>& c){
-	if(existeDependiente(id, c)||existeIndependiente(id, c)){	
-		typename colecInterdep<I,V>::Celda* pAux = c.prim;
-		while(pAux!=nullptr && pAux -> ident < id){
-			pAux = pAux -> sig;
-		}
-		if(pAux!=nullptr && pAux -> ident == id){
-			return pAux -> valor;
-		}
+V obtenerVal(const I& id, colecInterdep<I,V>& c){	//existeDependiente(id, c)||existeIndependiente(id, c)
+	typename colecInterdep<I,V>::Celda* pAux = c.prim;
+	while(pAux!=nullptr && pAux -> ident < id){
+		pAux = pAux -> sig;
+	}
+	if(pAux!=nullptr && pAux -> ident == id){
+		return pAux -> valor;
 	}
 }
 
@@ -401,29 +396,25 @@ V obtenerVal(const I& id, colecInterdep<I,V>& c){
 
 template<typename I,typename V>
 I obtenerSupervisor(const I& id, colecInterdep<I,V>& c){
-	if(existeDependiente(id, c)){
-		typename colecInterdep<I,V>::Celda* pAux = c.prim;
-		while(pAux!=nullptr && pAux -> ident < id){
-			pAux = pAux -> sig;
-		}
-		if(pAux!=nullptr && pAux -> ident == id){
-			return pAux ->dep->ident;
-		}		
+	typename colecInterdep<I,V>::Celda* pAux = c.prim;
+	while(pAux!=nullptr && pAux -> ident < id){
+		pAux = pAux -> sig;
+	}
+	if(pAux!=nullptr && pAux -> ident == id){
+		return pAux ->dep->ident;
 	}
 }
 
 
 template<typename I,typename V>
 int obtenerNumDependientes(const I& id, colecInterdep<I,V>& c){
-	if(existe(id, c)){
-		typename colecInterdep<I,V>::Celda* pAux = c.prim;
-		while(pAux!=nullptr && pAux -> ident < id){
-			pAux = pAux -> sig;
-		}
-		if(pAux!=nullptr && pAux -> ident == id){
-			return pAux -> numDepend;
-		}		
+	typename colecInterdep<I,V>::Celda* pAux = c.prim;
+	while(pAux!=nullptr && pAux -> ident < id){
+		pAux = pAux -> sig;
 	}
+	if(pAux!=nullptr && pAux -> ident == id){
+		return pAux -> numDepend;
+	}		
 }
 
 
@@ -489,28 +480,22 @@ bool existeSiguiente(colecInterdep<I,V>& c){
 
 
 template<typename I,typename V>
-I siguienteIdent(colecInterdep<I,V>& c){	//no definida si existe siguiente
-	if(existeSiguiente(c)){
+I siguienteIdent(colecInterdep<I,V>& c){	//no definida si existe siguiente{
 		return c.itr -> ident;
-	}
 }
 
 
 
 template<typename I,typename V>
 V siguienteVal(colecInterdep<I,V>& c){	//no definida si existe siguiente
-	if(existeSiguiente(c)){
-		return c.itr -> valor;
-	}
+	return c.itr -> valor;
 }
 
 
 
 template<typename I,typename V>
 bool siguienteDependiente(colecInterdep<I,V>& c){	//no definida si existe siguiente
-	if(existeSiguiente(c)){
-		return c.itr -> dep != nullptr;
-	}
+	return c.itr -> dep != nullptr;
 }
 
 
@@ -522,9 +507,7 @@ I siguienteSuperior(colecInterdep<I,V>& c){	//no definida si existe siguiente o 
 
 template<typename I,typename V>
 int siguienteNumDependientes(colecInterdep<I,V>& c){	//no definida si existe siguiente
-	if(existeSiguiente(c)){
-		return c.itr -> numDepend;
-	}
+	return c.itr -> numDepend;
 }
 
 

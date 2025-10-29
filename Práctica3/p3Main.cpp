@@ -4,11 +4,12 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
 
-void leerInstrucciones(const string fichero,evento& v,){
+void leerInstrucciones(evento& v,){
 	ifstream f;
 	f.open("entrada.txt");
 
