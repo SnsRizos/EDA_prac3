@@ -44,8 +44,6 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				}
 				//Añadir para escribir en fichero de salida
 			}else if( instruccion == "C"){ // CAMBIA EL VALOR DEL ID QUE NOS DA 
-				
-			
 				f >> ident;
 				getline(f,salto);
 				f >> info;
@@ -55,30 +53,30 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				crearEvento(info,prioridad,v);
 				actualizarVal(lista,ident,v); 
 				//Añadir para escribir en fichero de salida
-			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION DEL EVENTO DE ESE ID
+			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION  DE ESE ID
 				f >> ident;
 				getline(f,salto);
 				v=obtenerVal(ident,lista);
 				info=descripcion(v);
 				prioridad=suPrioridad(v);
+				//Añadir mas información de ese id
 				//Añadir para escribir en fichero de salida	
 			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
 				f >> ident;
 				getline(f,salto);
-				existe(ident); //HAY QUE AÑADIR VARIABLES
-
+				existe(ident,lista); 
+				//Añadir para escribir en fichero de salida
 			}else if(instruccion =="I"){//HACE INDEPENDIENTE A ESE IDENT
 				f >> ident;
 				getline(f,salto);
-				hacerIndependiente(ident);//HAY QUE AÑADIR VARIABLES
-
+				hacerIndependiente(lista,ident);
+				//Añadir para escribir en fichero de salida
 			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE NUEVO
 				f >> ident;
 				getline(f,salto);
-				string nuevo;
-				f >> nuevo;
+				
 				getline(f,salto);
-				hacerDependiente(,ident,nuevo);//HAY QUE AÑADIR VARIABLES
+				hacerDependiente(lista,ident,nuevo);//HAY QUE AÑADIR VARIABLES
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
 				f >> ident;
 				getline(f,salto);
