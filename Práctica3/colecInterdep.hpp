@@ -289,6 +289,8 @@ void anyadirDependiente(colecInterdep<I,V>& c, const I& id, const V& v, const I&
 			}
 				
 			if((pAux->sig == nullptr || pAux -> sig -> ident != id) && (pSup != nullptr && pSup -> ident == super)){ //Si no existe id y existe super
+				pSup -> numDepend = pSup -> numDepend+1;
+				
 				typename colecInterdep<I,V>::Celda* pNuevo;
 				pNuevo = new typename colecInterdep<I,V>::Celda;
 				pNuevo -> ident = id;
@@ -311,19 +313,20 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 
 	if( id!=super){
 		typename colecInterdep<I,V>::Celda* pAux = c.prim;
-		
+		typename colecInterdep<I,V>::Celda* pSuper = nullptr;
+		typename colecInterdep<I,V>::Celda* pId = nullptr;
 		bool encontradoS = false;
 		bool encontradoId = false;
    		while ( (!encontradoS || !encontradoId) || (pAux != nullptr) ) {
 			if(pAux->ident == id ){
 				encontradoId=true;
-				typename colecInterdep<I,V>::Celda* pId = pAux;
+				pId = pAux;
 			}
 			else if(pAux->ident == super){
 				encontradoS=true;
-				typename colecInterdep<I,V>::Celda* pSuper = pAux;
+				pSuper = pAux;
 			}
-			pAux = pSuper->sig;
+			pAux = pAux->sig;
 			
 			
 		}
