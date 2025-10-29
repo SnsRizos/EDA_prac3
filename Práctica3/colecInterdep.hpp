@@ -363,7 +363,7 @@ void hacerIndependiente(colecInterdep<I,V>& c, const I& id){
 			pId->dep->numDepend--;
 			pId->dep=nullptr;
 		}
-	}
+	}	
 }
 
 

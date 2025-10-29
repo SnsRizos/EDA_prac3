@@ -1,57 +1,67 @@
 /* Mijayl Mandzyak Melnyk 935521 Hector Manzano Miranda 926092*/
 #include "colecInterdep.hpp"
 #include "evento.hpp"
-
+#include <fstream>
 #include <iostream>
 #include <string>
 
 using namespace std;
 
 
-void leerInstrucciones(const string fichero,evento& v,){
+void leerInstrucciones(colecInterdep<string,evento>lista){
 	ifstream f;
 	f.open("entrada.txt");
 
 	if(f.is_open()){
+		evento v;
 		string instruccion,salto;
 		string ident;
+		string info;
+		int    prioridad;
+		string dependencia;
+		string super;
+
 		while(f >> instruccion){
 			getline(f,salto);
 			
 			if(instruccion == "A"){//AÑADE UN NUEVO ID A LA MEMORIA
 
-				f >> Celda.I; //HAY QUE CAMBIARLO
+				f >> ident; //HAY QUE CAMBIARLO
 				getline(f,salto);
-				f >> Celda.valor.descrip; //HAY QUE CAMBIARLO
+				f >> info; //HAY QUE CAMBIARLO
 				getline(f,salto);
-				f >> Celda.valor.prio; //HAY QUE CAMBIARLO
+				f >> prioridad; //HAY QUE CAMBIARLO
 				getline(f,salto);
-				f >> Dependencia; //Posiblemente
+				f >> dependencia; //Posiblemente
 				getline(f,salto);
-				f >> id;//Sera un string que si es Dependiente tendra que 						hacer un atoi
+				f >> super;//Sera un string que si es Dependiente tendra que hacer un atoi
 				getline(f,salto);
-				if(Dependencia == "DEPendiente"){ 
-					hacerDependiente() //rellenar con variable
+				crearEvento(info,prioridad,v);
+				if(dependencia == "DEPendiente"){ 
+					anyadirDependiente(lista,ident,v,super); 
 				}else{
-					Celda->dep = nullptr;
-					
+					anyadirIndependiente(lista,ident,v);
 				}
-				 //CAPAZ QUE HAY QUE AÑADIR MUCHO MAS
+				//Añadir para escribir en fichero de salida
 			}else if( instruccion == "C"){ // CAMBIA EL VALOR DEL ID QUE NOS DA 
-				//MODO DE PRUEBA
-				valor nuevo;
+				
+			
 				f >> ident;
 				getline(f,salto);
-				f >> nuevo.descrip;
+				f >> info;
 				getline(f,salto);
-				f >> nuevo.prio;
+				f >> prioridad;
 				getline(f,salto);
-				actualizarVal() // HAY QUE AÑADIR VARIABLES
-
-			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION DE ESE ID
+				crearEvento(info,prioridad,v);
+				actualizarVal(lista,ident,v); 
+				//Añadir para escribir en fichero de salida
+			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION DEL EVENTO DE ESE ID
 				f >> ident;
 				getline(f,salto);
-				//POSIBLEMENTE RELLENAR CON MAS COSAS	
+				v=obtenerVal(ident,lista);
+				info=descripcion(v);
+				prioridad=suPrioridad(v);
+				//Añadir para escribir en fichero de salida	
 			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
 				f >> ident;
 				getline(f,salto);
