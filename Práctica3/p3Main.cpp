@@ -75,16 +75,21 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE NUEVO
 				f >> ident;
 				getline(f,salto);
-				
+				f >> super;
 				getline(f,salto);
-				hacerDependiente(lista,ident,nuevo);//HAY QUE AÑADIR VARIABLES
+				hacerDependiente(lista,ident,super);
+				//Añadir para escribir en fichero de salida
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
 				f >> ident;
 				getline(f,salto);
-				borrar(ident);//HAY QUE AÑADIR VARIABLES
-			}else if ( instruccion == "LD"){
+				borrar(ident,lista);
+				//Añadir para escribir en fichero de salida
+			}else if ( instruccion == "LD"){//RECORRER TODA LA LISTA CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
 				f >> ident ;
 				
+			}else if( instruccion == "LT"){//RECORRER TODO LA LISTA MOSTRANDO TODOS LOS DATOS DE TODA LA LISTA
+
+
 			}
 
 		}
