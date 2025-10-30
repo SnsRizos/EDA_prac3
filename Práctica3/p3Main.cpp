@@ -85,7 +85,25 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				borrar(ident,lista);
 				//Añadir para escribir en fichero de salida
 			}else if ( instruccion == "LD"){//RECORRER TODA LA LISTA CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
-				f >> ident ;
+				f >> super;
+				getline(f,salto);
+				iniciarIterador(lista);
+				int puesto= 1;
+				while(existeSiguiente(lista)){
+						if(siguienteDependiente(lista)){
+							if(siguienteSuperior(lista)==ident){
+								
+								//Falta el OFSTREAM que muestra los datos
+
+							}
+
+
+
+						}
+					avanza(lista);
+
+				}
+				
 				
 			}else if( instruccion == "LT"){//RECORRER TODO LA LISTA MOSTRANDO TODOS LOS DATOS DE TODA LA LISTA
 
