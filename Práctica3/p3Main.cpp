@@ -57,10 +57,11 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION  DE ESE ID
 				f >> ident;
 				getline(f,salto);
-				v=obtenerVal(ident,lista);
+				obtenerVal(ident,lista,v);//Mirar si necesita un aviso si funciona mal
 				info=descripcion(v);
 				prioridad=suPrioridad(v);
-				//Añadir mas información de ese id
+				obtenerSupervisor(ident,lista,super);
+				obtenerNumDependientes(ident,lista);
 				//Añadir para escribir en fichero de salida	
 			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
 				f >> ident;
