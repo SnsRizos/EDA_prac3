@@ -48,10 +48,10 @@ template<typename I,typename V> void hacerIndependiente(colecInterdep<I,V>& c, c
 template<typename I,typename V> void actualizarVal(colecInterdep<I,V>& c, const I& id, const V& nuevo);
 
 
-template<typename I,typename V> V obtenerVal(const I& id, colecInterdep<I,V>& c);
+template<typename I,typename V> bool obtenerVal(const I& id, colecInterdep<I,V>& c, V& val);
 
 
-template<typename I,typename V> I obtenerSupervisor(const I& id, colecInterdep<I,V>& c);
+template<typename I,typename V> bool obtenerSupervisor(const I& id, colecInterdep<I,V>& c, I& sup);
 
 
 template<typename I,typename V> int obtenerNumDependientes(const I& id, colecInterdep<I,V>& c);
@@ -90,8 +90,8 @@ struct colecInterdep{
 	friend void hacerDependiente<I,V>(colecInterdep<I,V>& c,const I& id, const I& super);
 	friend void hacerIndependiente<I,V>(colecInterdep<I,V>& c, const I& id);
 	friend void actualizarVal<I,V>(colecInterdep<I,V>& c, const I& id, const V& v);
-	friend V obtenerVal<I,V>(const I& id, colecInterdep<I,V>& c);
-	friend I obtenerSupervisor<I,V>(const I& id, colecInterdep<I,V>& c);
+	friend bool obtenerVal<I,V>(const I& id, colecInterdep<I,V>& c, V& val);
+	friend bool obtenerSupervisor<I,V>(const I& id, colecInterdep<I,V>& c, I& sup);
 	friend int obtenerNumDependientes<I,V>(const I& id, colecInterdep<I,V>& c);
 	friend void borrar<I,V>(const I& id, colecInterdep<I,V>& c);
 
@@ -146,7 +146,7 @@ int tamanyo(colecInterdep<I,V>& c){
 
 template<typename I,typename V>
 bool esVacia(colecInterdep<I,V>& c){
-	return tamanyo(c)==0;
+	return c.prim == nullptr;
 }
 
 
@@ -382,26 +382,34 @@ void actualizarVal(colecInterdep<I,V>& c, const I& id, const V& nuevo){
 
 
 template<typename I,typename V>
-V obtenerVal(const I& id, colecInterdep<I,V>& c){	//existeDependiente(id, c)||existeIndependiente(id, c)
+bool obtenerVal(const I& id, colecInterdep<I,V>& c, V& val){	//existeDependiente(id, c)||existeIndependiente(id, c)
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
 	while(pAux!=nullptr && pAux -> ident < id){
 		pAux = pAux -> sig;
 	}
 	if(pAux!=nullptr && pAux -> ident == id){
-		return pAux -> valor;
+		val = pAux -> valor;
+		return true;
+	}
+	else{
+		return false;
 	}
 }
 
 
 
 template<typename I,typename V>
-I obtenerSupervisor(const I& id, colecInterdep<I,V>& c){
+bool obtenerSupervisor(const I& id, colecInterdep<I,V>& c, I& sup){
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
 	while(pAux!=nullptr && pAux -> ident < id){
 		pAux = pAux -> sig;
 	}
 	if(pAux!=nullptr && pAux -> ident == id){
-		return pAux ->dep->ident;
+		sup = pAux ->dep->ident;
+		return true;
+	}
+	else{
+		return false;
 	}
 }
 
