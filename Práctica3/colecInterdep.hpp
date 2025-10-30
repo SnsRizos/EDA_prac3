@@ -5,7 +5,7 @@
 // PREDECLARACION DEL TAD GENERICO colecInterdep (inicio INTERFAZ)
 
  /*El TAD GENERICO  colecInterdep su dominio de valores  seran de datos booleanos(bool) y datos naturales(int),además el parametro de tipo T tendra que tener  definidas las operaciones igual y anterior
-  //recordar al usuario que cualquier variable tipo I, tiene que tener las operaciones de comparacion de cpp
+  //recordar al usuario que cualquier variable tipo I, tiene que tener las operaciones de comparacion de cpp y 
   
  */
 
