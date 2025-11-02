@@ -39,8 +39,8 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				getline(f,salto);
 				crearEvento(info,prioridad,v);
 				if(dependencia == "DEPendiente"){ 
-					anyadirDependiente(lista,ident,v,super); 
-				}else{
+					anyadirDependiente(lista,ident,v,super); //Mirar haber como hacer que se sepa si se ha introducido o no
+				}else if(dependencia =="INDependiente"){
 					anyadirIndependiente(lista,ident,v);
 				}
 				//Añadir para escribir en fichero de salida
@@ -57,10 +57,11 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION  DE ESE ID
 				f >> ident;
 				getline(f,salto);
-				v=obtenerVal(ident,lista);
+				obtenerVal(ident,lista,v);//Mirar si necesita un aviso si funciona mal
 				info=descripcion(v);
 				prioridad=suPrioridad(v);
-				//Añadir mas información de ese id
+				obtenerSupervisor(ident,lista,super);
+				obtenerNumDependientes(ident,lista);
 				//Añadir para escribir en fichero de salida	
 			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
 				f >> ident;
@@ -106,6 +107,7 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				
 				
 			}else if( instruccion == "LT"){//RECORRER TODO LA LISTA MOSTRANDO TODOS LOS DATOS DE TODA LA LISTA
+					iniciarIterador(lista);
 
 
 			}
@@ -133,6 +135,7 @@ int main(){
 	crearEvento("fiji",1, e5);
 	string id2 = "cccc";
 	string id3 = "bbbb";
+	string super;
 
 	colecInterdep<string,evento> bolsa;
 	crear(bolsa);
@@ -146,7 +149,7 @@ int main(){
 	anyadirDependiente(bolsa,id3,e2,id2);
 	cout << tamanyo(bolsa) << endl;
 
-	cout << obtenerSupervisor(id3, bolsa) << endl;
+	cout << obtenerSupervisor(id3, bolsa,super) << endl;//Modificado por Mijayl
 
 	if(existeDependiente(id1, bolsa)){
 		cout << "Existe\n";

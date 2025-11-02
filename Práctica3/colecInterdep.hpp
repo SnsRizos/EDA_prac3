@@ -5,7 +5,7 @@
 // PREDECLARACION DEL TAD GENERICO colecInterdep (inicio INTERFAZ)
 
  /*El TAD GENERICO  colecInterdep su dominio de valores  seran de datos booleanos(bool) y datos naturales(int),además el parametro de tipo T tendra que tener  definidas las operaciones igual y anterior
-  //recordar al usuario que cualquier variable tipo I, tiene que tener las operaciones de comparacion de cpp y 
+  //recordar al usuario que cualquier variable tipo I, tiene que tener las operaciones de comparacion de cpp
   
  */
 
@@ -66,12 +66,12 @@ template<typename I,typename V> void borrar(const I& id, colecInterdep<I,V>& c);
 
 template<typename I,typename V> void iniciarIterador(colecInterdep<I,V>& c);
 template<typename I,typename V> bool existeSiguiente(colecInterdep<I,V>& c);
-template<typename I,typename V> bool siguienteIdent(colecInterdep<I,V>& c, I& id);
-template<typename I,typename V> bool siguienteVal(colecInterdep<I,V>& c, V& val);
+template<typename I,typename V> I siguienteIdent(colecInterdep<I,V>& c);
+template<typename I,typename V> V siguienteVal(colecInterdep<I,V>& c);
 template<typename I,typename V> bool siguienteDependiente(colecInterdep<I,V>& c);
-template<typename I,typename V> bool siguienteSuperior(colecInterdep<I,V>& c, I& sup);
+template<typename I,typename V> I siguienteSuperior(colecInterdep<I,V>& c);
 template<typename I,typename V> int siguienteNumDependientes(colecInterdep<I,V>& c);
-template<typename I,typename V> bool avanza(colecInterdep<I,V>& c);
+template<typename I,typename V> void avanza(colecInterdep<I,V>& c);
 
 
 
@@ -97,12 +97,12 @@ struct colecInterdep{
 
 	friend void iniciarIterador<I,V>(colecInterdep<I,V>& c);
 	friend bool existeSiguiente<I,V>(colecInterdep<I,V>& c);
-	friend bool siguienteIdent<I,V>(colecInterdep<I,V>& c, I& id);
-	friend bool siguienteVal<I,V>(colecInterdep<I,V>& c, V& val);
+	friend I siguienteIdent<I,V>(colecInterdep<I,V>& c);
+	friend V siguienteVal<I,V>(colecInterdep<I,V>& c);
 	friend bool siguienteDependiente<I,V>(colecInterdep<I,V>& c);
-	friend bool siguienteSuperior<I,V>(colecInterdep<I,V>& c, I& sup);
+	friend I siguienteSuperior<I,V>(colecInterdep<I,V>& c);
 	friend int siguienteNumDependientes<I,V>(colecInterdep<I,V>& c);
-	friend bool avanza<I,V>(colecInterdep<I,V>& c);
+	friend void avanza<I,V>(colecInterdep<I,V>& c);
 
     
 
@@ -443,9 +443,6 @@ int obtenerNumDependientes(const I& id, colecInterdep<I,V>& c){
 	}
 	if(pAux!=nullptr && pAux -> ident == id){
 		return pAux -> numDepend;
-	}
-	else{
-		return -1;
 	}		
 }
 
@@ -512,27 +509,15 @@ bool existeSiguiente(colecInterdep<I,V>& c){
 
 
 template<typename I,typename V>
-bool siguienteIdent(colecInterdep<I,V>& c, I& id){	//no definida si existe siguiente{
-	if(existeSiguiente(c)){
-		id = c.itr -> ident;
-		return true;
-	}
-	else{
-		return false;
-	}	
+I siguienteIdent(colecInterdep<I,V>& c){	//no definida si existe si	guiente{
+		return c.itr -> ident;
 }
 
 
 
 template<typename I,typename V>
-bool siguienteVal(colecInterdep<I,V>& c, V& val){	//no definida si existe siguiente
-	if(existeSiguiente(c)){
-		val = c.itr -> valor;
-		return true;
-	}
-	else{
-		return false;
-	} 
+V siguienteVal(colecInterdep<I,V>& c){	//no definida si existe siguiente
+	return c.itr -> valor;
 }
 
 
@@ -550,38 +535,20 @@ bool siguienteDependiente(colecInterdep<I,V>& c){	//no definida si existe siguie
 
 
 template<typename I,typename V>
-bool siguienteSuperior(colecInterdep<I,V>& c, I& sup){	//no definida si existe siguiente o es depend
-	bool encontrado = false;
-	if(existeSiguiente(c)){
-		if(c.itr -> dep != nullptr){
-			sup = c.itr -> dep -> ident;
-			encontrado = true;
-		}
-	} 
-	return encontrado;
+I siguienteSuperior(colecInterdep<I,V>& c){	//no definida si existe siguiente o es depend
+	return c.itr -> dep -> ident;
 }
 
 
 template<typename I,typename V>
 int siguienteNumDependientes(colecInterdep<I,V>& c){	//no definida si existe siguiente
-	if(existeSiguiente(c)){
-		return c.itr -> numDepend;
-	}
-	else{
-		return -1;
-	}
+	return c.itr -> numDepend;
 }
 
 
 template<typename I,typename V>
-bool avanza(colecInterdep<I,V>& c){	//no definida si existe siguiente
-	if(existeSiguiente(c)){
-		c.itr = c.itr -> sig;
-		return true;
-	}
-	else{
-		return false;
-	}
+void avanza(colecInterdep<I,V>& c){	//no definida si existe siguiente
+	c.itr = c.itr -> sig;
 }
 
 
