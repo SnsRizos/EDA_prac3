@@ -107,7 +107,7 @@ struct colecInterdep{
     
 
   private: //declaracion de la representacion interna del tipo
-           //... a COMPLETAR CON documentacion sobre la representacion interna ...
+           //Documentacion sobre la representacion interna
 	struct Celda{
 	I ident;
 	V valor;
@@ -119,13 +119,14 @@ struct colecInterdep{
 
 	Celda* prim;
 	int tam;
-    //COMPLETAR CAMPOS ITERADOR
+    //CAMPOS ITERADOR
 	Celda* itr;
 };
 
 
 
 //OPERACIONES
+//
 template<typename I,typename V> 
 void crear(colecInterdep<I,V>& c){
 	c.tam=0;
@@ -443,7 +444,10 @@ int obtenerNumDependientes(const I& id, colecInterdep<I,V>& c){
 	}
 	if(pAux!=nullptr && pAux -> ident == id){
 		return pAux -> numDepend;
-	}		
+	}
+	else{
+		return -1;
+	}	
 }
 
 
