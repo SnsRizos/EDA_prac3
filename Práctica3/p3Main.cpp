@@ -8,7 +8,7 @@
 using namespace std;
 
 
-void leerInstrucciones(colecInterdep<string,evento>lista){
+void leerInstrucciones(colecInterdep<string,evento>colec){
 	ifstream f;
 	f.open("entrada.txt");
 
@@ -41,12 +41,12 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				getline(f,salto);
 				crearEvento(info,prioridad,v);
 				if(dependencia == "DEPendiente"){ 
-					anyadirDependiente(lista,ident,v,super); 
+					anyadirDependiente(colec,ident,v,super); 
 				}else if(dependencia =="INDependiente"){
-					anyadirIndependiente(lista,ident,v);
+					anyadirIndependiente(colec,ident,v);
 				}
 				
-				if(existe(ident,lista)){
+				if(existe(ident,colec)){
 					s<<"INTRODUCIDO: ";
 				}else{
 					s<<"NO INTRODUCIDO: ";
@@ -67,14 +67,14 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				getline(f,salto);
 				crearEvento(info,prioridad,v);
 				
-					if(actualizarVal(lista,ident,v)){
+					if(actualizarVal(colec,ident,v)){
 						s<<"CAMBIADO: ";
-						int numDepends =obtenerNumDependientes(ident,lista);
-						if(existeIndependiente(ident,lista)){
+						int numDepends =obtenerNumDependientes(ident,colec);
+						if(existeIndependiente(ident,colec)){
 							s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 						}else{
-							obtenerSupervisor(ident,lista,super);
+							obtenerSupervisor(ident,colec,super);
 							s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<	numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 						}
@@ -85,17 +85,17 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				f >> ident;
 				getline(f,salto);
 	
-				if(existe(ident,lista)){
+				if(existe(ident,colec)){
 					s<<"LOCALIZADO: ";
-					obtenerVal(ident,lista,v);
+					obtenerVal(ident,colec,v);
 					info=descripcion(v);
 					prioridad=suPrioridad(v);
-					int numDepends =obtenerNumDependientes(ident,lista);
-					if(existeIndependiente(ident,lista)){
+					int numDepends =obtenerNumDependientes(ident,colec);
+					if(existeIndependiente(ident,colec)){
 						s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 					}else{
-						obtenerSupervisor(ident,lista,super);
+						obtenerSupervisor(ident,colec,super);
 						s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 					}
 				}else{
@@ -106,8 +106,8 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				f >> ident;
 				getline(f,salto);
 
-				if(existe(ident,lista)){
-					if(existeIndependiente(ident,lista)){
+				if(existe(ident,colec)){
+					if(existeIndependiente(ident,colec)){
 						s<<"INDEPendiente: ";
 					}else{
 						s<<"DEPendiente: ";
@@ -122,11 +122,11 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				f >> ident;
 				getline(f,salto);
 			
-				if(existe(ident,lista)){
-					if(existeIndependiente(ident,lista)){
+				if(existe(ident,colec)){
+					if(existeIndependiente(ident,colec)){
 						s<<"YA ERA INDepend.: ";
 					}else{
-						hacerIndependiente(lista,ident);
+						hacerIndependiente(colec,ident);
 						s<<"INDEPENDIZADO: ";
 					}
 					}else{
@@ -140,9 +140,9 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				f >> super;
 				getline(f,salto);
 				
-				if(existe(ident,lista) && existe(super,lista)){
+				if(existe(ident,colec) && existe(super,colec)){
 						
-					hacerDependiente(lista,ident,super);
+					hacerDependiente(colec,ident,super);
 					s<<"INTENTANDO hacer depend.: ";
 						
 				}else{
@@ -154,8 +154,8 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				f >> ident;
 				getline(f,salto);
 			
-				if(existe(ident,lista)){
-					borrar(ident,lista);
+				if(existe(ident,colec)){
+					borrar(ident,colec);
 					s<<"BORRADO: ";
 						
 				}else{
@@ -163,14 +163,14 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 
 				} 
 				s<<ident<<endl;	
-			}else if ( instruccion == "LD"){//RECORRER TODA LA LISTA CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
+			}else if ( instruccion == "LD"){//RECORRER TODA LA colec CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
 				f >> super;
 				getline(f,salto);
-				iniciarIterador(lista);
+				iniciarIterador(colec);
 				int puesto= 1;
-				while(existeSiguiente(lista)){
-						if(siguienteDependiente(lista)){
-							if(siguienteSuperior(lista,ident)){
+				while(existeSiguiente(colec)){
+						if(siguienteDependiente(colec)){
+							if(siguienteSuperior(colec,ident)){
 								
 								//Falta el OFSTREAM que muestra los datos
 
@@ -179,13 +179,13 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 
 
 						}
-					avanza(lista);
+					avanza(colec);
 
 				}
 				
 				
-			}else if( instruccion == "LT"){//RECORRER TODO LA LISTA MOSTRANDO TODOS LOS DATOS DE TODA LA LISTA
-					iniciarIterador(lista);
+			}else if( instruccion == "LT"){//RECORRER TODO LA colec MOSTRANDO TODOS LOS DATOS DE TODA LA colec
+					iniciarIterador(colec);
 
 
 			}
