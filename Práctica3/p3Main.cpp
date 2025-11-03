@@ -59,11 +59,10 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 							s<<"[ "<<ident<<"-de-> "<<super<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 						}
-
+						s.close();
 				}else{
 					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
 				}
-				//Añadir para escribir en fichero de salida
 			}else if( instruccion == "C"){ // CAMBIA EL VALOR DEL ID QUE NOS DA 
 				f >> ident;
 				getline(f,salto);
@@ -72,22 +71,78 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				f >> prioridad;
 				getline(f,salto);
 				crearEvento(info,prioridad,v);
-				actualizarVal(lista,ident,v); 
-				//Añadir para escribir en fichero de salida
+				ofstream s;
+				s.open("salida.txt");
+				if(s.is_open()){
+					if(actualizarVal(lista,ident,v)){
+						s<<"CAMBIADO: ";
+						int numDepends =obtenerNumDependientes(ident,lista);
+						if(existeIndependiente(ident,lista)){
+							s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+
+						}else{
+							obtenerSupervisor(ident,lista,super);
+							s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<	numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+
+						}
+					}else{
+						s<<"NO CAMBIADO: "<< ident<<endl;
+					}
+					s.close();
+				}else{
+					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
+				} 
+				
 			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION  DE ESE ID
 				f >> ident;
 				getline(f,salto);
-				obtenerVal(ident,lista,v);//Mirar si necesita un aviso si funciona mal
-				info=descripcion(v);
-				prioridad=suPrioridad(v);
-				obtenerSupervisor(ident,lista,super);
-				obtenerNumDependientes(ident,lista);
-				//Añadir para escribir en fichero de salida	
+				
+				ofstream s;
+				s.open("salida.txt");
+				if(s.is_open()){
+					if(existe(ident,lista)){
+						s<<"LOCALIZADO: ";
+						obtenerVal(ident,lista,v);
+						info=descripcion(v);
+						prioridad=suPrioridad(v);
+						int numDepends =obtenerNumDependientes(ident,lista);
+						if(existeIndependiente(ident,lista)){
+							s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+
+						}else{
+							obtenerSupervisor(ident,lista,super);
+							s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+						}
+					}else{
+						s<<"NO LOCALIZADO: "<<ident<<endl;
+
+					}
+					s.close();
+				}else{
+					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
+				}
 			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
 				f >> ident;
 				getline(f,salto);
-				existe(ident,lista); 
-				//Añadir para escribir en fichero de salida
+
+				ofstream s;
+				s.open("salida.txt");
+				if(s.is_open()){
+					if(existe(ident,lista)){
+						if(existeIndependiente(ident,lista)){
+							s<<"INDEPendiente: ";
+						}else{
+							s<<"DEPendiente: ";
+						}
+					}else{
+						s<<"DESCONOCIDO: ";
+
+					} 
+					s<<ident<<endl;
+					s.close();
+				}else{
+					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
+				}
 			}else if(instruccion =="I"){//HACE INDEPENDIENTE A ESE IDENT
 				f >> ident;
 				getline(f,salto);
