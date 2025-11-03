@@ -43,6 +43,26 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				}else if(dependencia =="INDependiente"){
 					anyadirIndependiente(lista,ident,v);
 				}
+				ofstream s;
+				s.open("salida.txt");
+				if(s.is_open()){
+					if(existe(ident,lista)){
+						s<<"INTRODUCIDO: ";
+
+					}else{
+						s<<"NO INTRODUCIDO: ";
+
+					}
+						if(dependencia == "INDependiente"){
+							s<<"[ "<<ident<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+						}else{
+							s<<"[ "<<ident<<"-de-> "<<super<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+
+						}
+
+				}else{
+					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
+				}
 				//Añadir para escribir en fichero de salida
 			}else if( instruccion == "C"){ // CAMBIA EL VALOR DEL ID QUE NOS DA 
 				f >> ident;
