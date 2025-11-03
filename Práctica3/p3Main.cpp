@@ -27,19 +27,19 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 			
 			if(instruccion == "A"){//AÑADE UN NUEVO ID A LA MEMORIA
 
-				f >> ident; //HAY QUE CAMBIARLO
+				f >> ident; 
 				getline(f,salto);
-				f >> info; //HAY QUE CAMBIARLO
+				f >> info; 
 				getline(f,salto);
-				f >> prioridad; //HAY QUE CAMBIARLO
+				f >> prioridad; 
 				getline(f,salto);
-				f >> dependencia; //Posiblemente
+				f >> dependencia;
 				getline(f,salto);
-				f >> super;//Sera un string que si es Dependiente tendra que hacer un atoi
+				f >> super;
 				getline(f,salto);
 				crearEvento(info,prioridad,v);
 				if(dependencia == "DEPendiente"){ 
-					anyadirDependiente(lista,ident,v,super); //Mirar haber como hacer que se sepa si se ha introducido o no
+					anyadirDependiente(lista,ident,v,super); 
 				}else if(dependencia =="INDependiente"){
 					anyadirIndependiente(lista,ident,v);
 				}
@@ -146,20 +146,75 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 			}else if(instruccion =="I"){//HACE INDEPENDIENTE A ESE IDENT
 				f >> ident;
 				getline(f,salto);
-				hacerIndependiente(lista,ident);
-				//Añadir para escribir en fichero de salida
-			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE NUEVO
+				
+
+				ofstream s;
+				s.open("salida.txt");
+				if(s.is_open()){
+					if(existe(ident,lista)){
+						if(existeIndependiente(ident,lista)){
+							s<<"YA ERA INDepend.: ";
+						}else{
+							hacerIndependiente(lista,ident);
+							s<<"INDEPENDIZADO: ";
+						}
+					}else{
+						s<<"NO INDEPENDIZADO: ";
+
+					} 
+					s<<ident<<endl;
+					s.close();
+				}else{
+					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
+				}
+				
+			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE SUPER
 				f >> ident;
 				getline(f,salto);
 				f >> super;
 				getline(f,salto);
 				hacerDependiente(lista,ident,super);
-				//Añadir para escribir en fichero de salida
+
+				ofstream s;
+				s.open("salida.txt");
+				if(s.is_open()){
+					if(existe(ident,lista)&&existe(super,lista)){
+						
+							hacerDependiente(lista,ident,super);
+							s<<"INTENTANDO hacer depend.: ";
+						
+					}else{
+						s<<"IMPOSIBLE hacer depend.: ";
+
+					} 
+					s<<ident<<" -de-> "<<super<<endl;
+					s.close();
+				}else{
+					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
+				}
+				
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
 				f >> ident;
 				getline(f,salto);
-				borrar(ident,lista);
-				//Añadir para escribir en fichero de salida
+				
+
+				ofstream s;
+				s.open("salida.txt");
+				if(s.is_open()){
+					if(existe(ident,lista)){
+						borrar(ident,lista);
+						s<<"BORRADO: ";
+						
+					}else{
+						s<<"NO BORRADO: ";
+
+					} 
+					s<<ident<<endl;
+					s.close();
+				}else{
+					cerr << "No ha podido escribirse el fichero \"" << "salida.txt" << "\"." << endl;
+				}
+				
 			}else if ( instruccion == "LD"){//RECORRER TODA LA LISTA CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
 				f >> super;
 				getline(f,salto);
