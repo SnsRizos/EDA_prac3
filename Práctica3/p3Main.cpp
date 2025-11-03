@@ -167,7 +167,7 @@ void leerInstrucciones(colecInterdep<string,evento>lista){
 				int puesto= 1;
 				while(existeSiguiente(lista)){
 						if(siguienteDependiente(lista)){
-							if(siguienteSuperior(lista)==ident){
+							if(siguienteSuperior(lista,ident)){
 								
 								//Falta el OFSTREAM que muestra los datos
 
