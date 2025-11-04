@@ -211,7 +211,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			}else if( instruccion == "LT"){//RECORRER TODO LA colec MOSTRANDO TODOS LOS DATOS DE TODA LA colec
 				s <<"-----LISTADO: "<<tamanyo(colec)<<endl;
 				
-				if(tamanyo>0){
+				if(tamanyo(colec)>0){
 					iniciarIterador(colec);
 					
 					while(existeSiguiente(colec)){ // Si eso modificar con puesto menor cuando vaya LD porque si no hay dependientes de ident recorre de todas maneras la colec
