@@ -23,6 +23,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			int    prioridad;
 			string dependencia;
 			string super;
+			int numDepends;//Si da problemas alguna funcion darle a esto valor 0 al principio
 
 			while(f >> instruccion){
 			getline(f,salto);
@@ -47,14 +48,14 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				}
 				
 				if(existe(ident,colec)){
-					s<<"INTRODUCIDO: ";
+					s <<"INTRODUCIDO: ";
 				}else{
-					s<<"NO INTRODUCIDO: ";
+					s <<"NO INTRODUCIDO: ";
 				}
 				if(dependencia == "INDependiente"){
-					s<<"[ "<<ident<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+					s <<"[ "<<ident<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 				}else if(dependencia =="INDependiente"){
-					s<<"[ "<<ident<<"-de-> "<<super<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+					s <<"[ "<<ident<<"-de-> "<<super<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 				}
 						
 				
@@ -68,37 +69,37 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				crearEvento(info,prioridad,v);
 				
 					if(actualizarVal(colec,ident,v)){
-						s<<"CAMBIADO: ";
-						int numDepends =obtenerNumDependientes(ident,colec);
+						s <<"CAMBIADO: ";
+						numDepends =obtenerNumDependientes(ident,colec);
 						if(existeIndependiente(ident,colec)){
-							s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+							s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 						}else{
 							obtenerSupervisor(ident,colec,super);
-							s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<	numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+							s <<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<	numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 						}
 					}else{
-						s<<"NO CAMBIADO: "<< ident<<endl;
+						s <<"NO CAMBIADO: "<< ident<<endl;
 					}
 			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION  DE ESE ID
 				f >> ident;
 				getline(f,salto);
 	
 				if(obtenerVal(ident,colec,v)){
-					s<<"LOCALIZADO: ";
+					s <<"LOCALIZADO: ";
 					info=descripcion(v);
 					prioridad=suPrioridad(v);
-					int numDepends =obtenerNumDependientes(ident,colec);
+					numDepends =obtenerNumDependientes(ident,colec);
 					if(existeIndependiente(ident,colec)){
-						s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+						s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 					}else{
 						obtenerSupervisor(ident,colec,super);
-						s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+						s <<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 					}
 				}else{
-					s<<"NO LOCALIZADO: "<<ident<<endl;
+					s <<"NO LOCALIZADO: "<<ident<<endl;
 
 				}
 			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
@@ -107,15 +108,15 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 
 				if(existe(ident,colec)){
 					if(existeIndependiente(ident,colec)){
-						s<<"INDEPendiente: ";
+						s <<"INDEPendiente: ";
 					}else{
-						s<<"DEPendiente: ";
+						s <<"DEPendiente: ";
 					}
 				}else{
-					s<<"DESCONOCIDO: ";
+					s <<"DESCONOCIDO: ";
 
 				} 
-				s<<ident<<endl;
+				s <<ident<<endl;
 			
 			}else if(instruccion =="I"){//HACE INDEPENDIENTE A ESE IDENT
 				f >> ident;
@@ -123,16 +124,16 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			
 				if(existe(ident,colec)){
 					if(existeIndependiente(ident,colec)){
-						s<<"YA ERA INDepend.: ";
+						s <<"YA ERA INDepend.: ";
 					}else{
 						hacerIndependiente(colec,ident);
-						s<<"INDEPENDIZADO: ";
+						s <<"INDEPENDIZADO: ";
 					}
 					}else{
-						s<<"NO INDEPENDIZADO: ";
+						s <<"NO INDEPENDIZADO: ";
 
 					} 
-					s<<ident<<endl;
+					s <<ident<<endl;
 			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE SUPER
 				f >> ident;
 				getline(f,salto);
@@ -142,66 +143,96 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				if(existe(ident,colec) && existe(super,colec)){
 						
 					hacerDependiente(colec,ident,super);
-					s<<"INTENTANDO hacer depend.: ";
+					s <<"INTENTANDO hacer depend.: ";
 						
 				}else{
-					s<<"IMPOSIBLE hacer depend.: ";
+					s <<"IMPOSIBLE hacer depend.: ";
 
 				} 
-				s<<ident<<" -de-> "<<super<<endl;
+				s <<ident<<" -de-> "<<super<<endl;
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
 				f >> ident;
 				getline(f,salto);
 				borrar(ident,colec);
 
 				if(!existe(ident,colec)){
-					s<<"BORRADO: ";
+					s <<"BORRADO: ";
 						
 				}else{
-					s<<"NO BORRADO: ";
+					s <<"NO BORRADO: ";
 
 				} 
-				s<<ident<<endl;	
+				s <<ident<<endl;	
 			}else if ( instruccion == "LD"){//RECORRER TODA LA colec CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
 				f >> ident;
 				getline(f,salto);
-				iniciarIterador(colec);
-				int puesto= 1;
-				if(existe(ident)){
-					s<<"****DEPENDIENTES: "<<ident<<endl;
+				
+				if(existe(ident,colec)){
+					s <<"****DEPENDIENTES: "<<ident<<endl;
 					obtenerVal(ident,colec,v);
 					info=descripcion(v);
 					prioridad=suPrioridad(v);
-					int numDepends =obtenerNumDependientes(ident,colec);
+					numDepends =obtenerNumDependientes(ident,colec);
+
 					if(existeIndependiente(ident,colec)){
-						s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
+						s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
 					}else{
 						obtenerSupervisor(ident,colec,super);
-						s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
+						s <<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
 					}
-					while(existeSiguiente(colec)){
-						if(siguienteDependiente(colec)){
-							if(siguienteSuperior(colec,ident)){
+					iniciarIterador(colec);
+					int puesto= 1;
+					string iddep;
+
+					while(existeSiguiente(colec)){ // Si eso modificar con puesto menor cuando vaya LD porque si no hay dependientes de ident recorre de todas maneras la colec
+						
+						if(siguienteSuperior(colec,super)){
+							
+								if(super == ident){
+									siguienteIdent(colec,iddep);
+									siguienteVal(colec,v);
+									info=descripcion(v);
+									prioridad=suPrioridad(v);
+									numDepends=siguienteNumDependientes(colec);
+									s <<"["<<puesto<<" -> "<<iddep<<" -de-> "<<ident<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ;;;;"<<endl;
+									puesto++;
+								}
 								
-								//Falta el OFSTREAM que muestra los datos
-
-							}
-
-
 
 						}
-					avanza(colec);
+						avanza(colec);
 
+					}
+					s <<"****FINAL dependientes -de-> "<<ident<<endl;
+				}else{
+					s <<"****DESCONOCIDO"<<endl;
 				}
-			}else{
-				s<<"****DESCONOCIDO: "
-
-			}
 				
 			}else if( instruccion == "LT"){//RECORRER TODO LA colec MOSTRANDO TODOS LOS DATOS DE TODA LA colec
+				s <<"-----LISTADO: "<<tamanyo(colec)<<endl;
+				
+				if(tamanyo>0){
 					iniciarIterador(colec);
+					
+					while(existeSiguiente(colec)){ // Si eso modificar con puesto menor cuando vaya LD porque si no hay dependientes de ident recorre de todas maneras la colec
+						siguienteIdent(colec,ident);
+						siguienteVal(colec,v);
+						info=descripcion(v);
+						prioridad=suPrioridad(v);
+						numDepends=siguienteNumDependientes(colec);
 
+						if(siguienteSuperior(colec,super)){
+									
+							s <<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
+						}else{
+							s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;		
+						}
+						avanza(colec);
+
+					}
+				}
+				s <<"-----"<<endl;
 			}
 
 		}
