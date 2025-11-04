@@ -250,7 +250,9 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 
 
 int main(){
-	evento e1, e2, e3, e4, e5;
+	colecInterdep<string,evento> bolsa;
+	crear(bolsa);
+	/*evento e1, e2, e3, e4, e5;
 	crearEvento("pepe",1, e1);
 	string dato = descripcion(e1);
 	cout << dato << endl;
@@ -323,5 +325,6 @@ int main(){
 
 	if(!esVacia(bolsa)){
 		cout << "notch\n";
-	}
+	}*/
+	leerInstrucciones()
 }
