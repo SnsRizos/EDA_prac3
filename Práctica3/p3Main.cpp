@@ -326,5 +326,5 @@ int main(){
 	if(!esVacia(bolsa)){
 		cout << "notch\n";
 	}*/
-	leerInstrucciones()
+	leerInstrucciones(bolsa);
 }
