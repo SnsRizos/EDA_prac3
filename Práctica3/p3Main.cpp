@@ -85,9 +85,8 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				f >> ident;
 				getline(f,salto);
 	
-				if(existe(ident,colec)){
+				if(obtenerVal(ident,colec,v)){
 					s<<"LOCALIZADO: ";
-					obtenerVal(ident,colec,v);
 					info=descripcion(v);
 					prioridad=suPrioridad(v);
 					int numDepends =obtenerNumDependientes(ident,colec);
@@ -153,9 +152,9 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
 				f >> ident;
 				getline(f,salto);
-			
-				if(existe(ident,colec)){
-					borrar(ident,colec);
+				borrar(ident,colec);
+
+				if(!existe(ident,colec)){
 					s<<"BORRADO: ";
 						
 				}else{
@@ -164,11 +163,23 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				} 
 				s<<ident<<endl;	
 			}else if ( instruccion == "LD"){//RECORRER TODA LA colec CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
-				f >> super;
+				f >> ident;
 				getline(f,salto);
 				iniciarIterador(colec);
 				int puesto= 1;
-				while(existeSiguiente(colec)){
+				if(existe(ident)){
+					s<<"****DEPENDIENTES: "<<ident<<endl;
+					obtenerVal(ident,colec,v);
+					info=descripcion(v);
+					prioridad=suPrioridad(v);
+					int numDepends =obtenerNumDependientes(ident,colec);
+					if(existeIndependiente(ident,colec)){
+						s<<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
+					}else{
+						obtenerSupervisor(ident,colec,super);
+						s<<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
+					}
+					while(existeSiguiente(colec)){
 						if(siguienteDependiente(colec)){
 							if(siguienteSuperior(colec,ident)){
 								
@@ -182,7 +193,10 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 					avanza(colec);
 
 				}
-				
+			}else{
+				s<<"****DESCONOCIDO: "
+
+			}
 				
 			}else if( instruccion == "LT"){//RECORRER TODO LA colec MOSTRANDO TODOS LOS DATOS DE TODA LA colec
 					iniciarIterador(colec);
