@@ -4,18 +4,25 @@
 
 // PREDECLARACION DEL TAD GENERICO colecInterdep (inicio INTERFAZ)
 
- /*El TAD GENERICO  colecInterdep su dominio de valores  seran de datos booleanos(bool) y datos naturales(int),además el parametro de tipo T tendra que tener  definidas las operaciones igual y anterior
-  //recordar al usuario que cualquier variable tipo I, tiene que tener las operaciones de comparacion de cpp
-  
- */
-
+/*El TAD GENERICO  colecInterdep es una colección ordenada de elementos cuyo dominio de valores seran de datos
+ * booleanos(bool) y datos naturales(int).
+ *
+ * Todas las funciones de la colcección tienen coste lineal O(n) salvo crear, tamanyo y esVacia que tienen coste
+ * constante. Todas las funciones del iterador tienen coste constante.
+ * Igualmente, el coste en memoria de esta implementación será O(N).
+ * 
+ * Al parámetro formal I le exigimos estar dotado de los operadores habituales de: 
+ * comparación de igualdad == , y anterior <
+ * bool operator==(const I& i1, const I& i2); 
+ * bool operator<(const I& i1, const I& i2);
+ *
+ */ 
 template<typename I,typename V> struct colecInterdep;
 
 
-/* COMPLETAR LA DOCUMENTACION PUBLICA DE CADA OPERACION DEL TAD 		**ELIMINAR CUANDO ESTÉN TODAS
-*/
 
-/* Dada una colección "c", crea una vacía, sin elementos.
+
+/* Crea una colección c vacía, sin elementos.
 */
 template<typename I,typename V> void crear(colecInterdep<I,V>& c);
 
@@ -127,9 +134,21 @@ template<typename I,typename V> void borrar(const I& id, colecInterdep<I,V>& c);
 
 
 
+/* Devuelve true si y sólo si id1 y id2 tienen el mismo identificador. 
+ * Cada elemento de la colección puede ser comparado utilizando el operador == de los datos de tipo I.
+*/
+template<typename I> bool operator==(const I& id1, const I& id2);
 
 
-/* Dada una colección c, inicia el iterador para poder recorrer los elementos de dicha colección.
+/* Devuelve true si y sólo si id1 tiene un identificador mayor/posterior a id2. 
+ * Cada elemento de la colección puede ser comparado utilizando el operador < de los datos de tipo I.
+*/
+template<typename I> bool operator>(const I& id1, const I& id2);
+
+
+
+/* Dada una colección c, inicia el iterador para que el siguiente elemento a visitar sea el primer elemento de c
+ * si existe
 */
 template<typename I,typename V> void iniciarIterador(colecInterdep<I,V>& c);
 
@@ -172,8 +191,8 @@ template<typename I,typename V> bool siguienteSuperior(colecInterdep<I,V>& c, I&
 template<typename I,typename V> int siguienteNumDependientes(colecInterdep<I,V>& c);
 
 
-/* Dada una colección c, si existen elementos por visitar hace que el iterador avance para visitar el siguiente
- * elemento de la colección.
+/* Dada una colección c, devuelve en forma de booleano TRUE si existen elementos por visitar y hace que el iterador 
+ * avance para visitar el siguiente elemento de la colección. Devuelve FALSE en caso contrario y no avanza.
 */
 template<typename I,typename V> bool avanza(colecInterdep<I,V>& c);
 
@@ -198,6 +217,9 @@ struct colecInterdep{
 	friend bool obtenerSupervisor<I,V>(const I& id, colecInterdep<I,V>& c, I& sup);
 	friend int obtenerNumDependientes<I,V>(const I& id, colecInterdep<I,V>& c);
 	friend void borrar<I,V>(const I& id, colecInterdep<I,V>& c);
+	
+	friend bool operator==<I>(const I& id1, const I& id2);
+	friend bool operator><I>(const I& id1, const I& id2);
 
 	friend void iniciarIterador<I,V>(colecInterdep<I,V>& c);
 	friend bool existeSiguiente<I,V>(colecInterdep<I,V>& c);
@@ -210,8 +232,23 @@ struct colecInterdep{
 
     
 
-  private: //declaracion de la representacion interna del tipo
-           //Documentacion sobre la representacion interna
+  private: /* En esta implementación la colección se representará en memoria dinámica como una lista enlazada de Celdas ordenada 
+  			* por el identificdor de los elementos de menor a mayor con: 
+	        * - el puntero prim: apuntando a la Celda que contiene el primer elemento de la colección, será nullptr si la colección
+			* está vacía
+		    * - el campo tam: mantendrá calculado el tamaño o número de elementos en la colección, será 0 si la pila está vacía 
+		    * - el puntero itr: se utilizará para mantener el estado del iterador, y únicamente será utilizado por las operaciones 
+			* iniciarIterador, existeSiguiente, siguienteIdent, siguienteVal, siguienteDependiente, siguienteSuperior, siguienteNumDependientes
+			* y avanza.
+			* Cada Celda contendrá un identificador (en su campo ident), un valor (en su campo valor), apuntará con su puntero dep 
+			* al elemento del que es dependiente o a nullptr si es independiente, un entero que almacenará el número de elementos 
+			* que dependen de este y apuntará con su puntero sig a la próxima Celda que contenga el primer elemento con un identificador
+			* mayor a este o a nullptr si este es el elemento con mayor identificador.
+	   
+    Todas las funciones de la colcección tienen coste lineal O(n) salvo crear, tamanyo y esVacia que tienen coste
+	constante. Todas las funciones del iterador tienen coste constante.
+	Igualmente, el coste en memoria de esta implementación será O(N).
+	*/
 	struct Celda{
 	I ident;
 	V valor;
@@ -230,7 +267,9 @@ struct colecInterdep{
 
 
 //OPERACIONES
-//
+
+/* Crea una colección c vacía, sin elementos.
+*/
 template<typename I,typename V> 
 void crear(colecInterdep<I,V>& c){
 	c.tam=0;
@@ -240,7 +279,8 @@ void crear(colecInterdep<I,V>& c){
 }
 
 
-
+/* Dada una colección "c", devuelve el número de elementos que hay en esta en forma de entero.
+*/
 template<typename I,typename V>
 int tamanyo(colecInterdep<I,V>& c){
 	return c.tam;
@@ -248,14 +288,18 @@ int tamanyo(colecInterdep<I,V>& c){
 }
 
 
-
+/* Dada una colección "c", devuelve en forma de booleano si esta es vacía, es decir, no tiene ningún elemento.
+ * Devuelve TRUE si y solo si esta es vacía y false si no lo es.
+*/
 template<typename I,typename V>
 bool esVacia(colecInterdep<I,V>& c){
 	return c.prim == nullptr;
 }
 
 
-
+/* Dado un identificador "id" y una colección "c", devuelve en forma de booleano TRUE si y solo si en c hay un
+ * elemento con el identificador aportado. Devuelve FALSE en caso contrario.
+*/
 template<typename I,typename V> 
 bool existe(const I& id, colecInterdep<I,V>& c){
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
@@ -602,22 +646,56 @@ void borrar(const I& id, colecInterdep<I,V>& c){
 
 
 
+/* Devuelve true si y sólo si id1 y id2 tienen el mismo identificador. 
+ * Cada elemento de la colección puede ser comparado utilizando el operador == de los datos de tipo I.
+*/
+template<typename I> bool operator==(const I& id1, const I& id2){
+	return id1 == id2;
+}
+
+
+/* Devuelve true si y sólo si id1 tiene un identificador mayor/posterior a id2. 
+ * Cada elemento de la colección puede ser comparado utilizando el operador < de los datos de tipo I.
+*/
+template<typename I> bool operator>(const I& id1, const I& id2){
+	return id1 > id2;
+}
+
+
+
 //ITERADOR
+/* Las ocho operaciones siguientes conforman un iterador interno para la colección: 
+ * Este iterador permitirá visitar los elementos almacenados en la colección empezando por el primer elemento (el
+ * de menor identificador) y acabando con el último elemento (el de mayor identificador).
+ * Si el puntero itr de la colección tiene valor nullptr entonces no existe elemento pendiente por visitar (ya se 
+ * han visitado todos los elementos), en caso contrario el puntero apunta a la Celda cuyo dato es el siguiente 
+ * elemento a visitar.
+*/
+
+
+/* Dada una colección c, inicia el iterador para que el siguiente elemento a visitar sea el primer elemento de c
+ * si existe
+*/
 template<typename I,typename V>
 void iniciarIterador(colecInterdep<I,V>& c){
 	c.itr = c.prim;
 }
 
-
+/* Dada una colección c, devuelve en forma de booleano TRUE si y solo si queda algún elemento por visitar en la
+ * colección y FALSE en caso contrario.
+*/
 template<typename I,typename V>
 bool existeSiguiente(colecInterdep<I,V>& c){
 	return c.itr != nullptr;
 }
 
 
-
+/* Dada una colección c y un identificador id, si queda algún elemento por visitar en la colección modifica id
+ * con el identificador del elemento visitado y devuelve TRUE en forma de booleano. En caso contrario devuelve
+ * FALSE. 
+*/
 template<typename I,typename V>
-bool siguienteIdent(colecInterdep<I,V>& c, I& id){	//no definida si existe siguiente{
+bool siguienteIdent(colecInterdep<I,V>& c, I& id){
 	if(existeSiguiente(c)){
 		id = c.itr -> ident;
 		return true;
@@ -628,9 +706,11 @@ bool siguienteIdent(colecInterdep<I,V>& c, I& id){	//no definida si existe sigui
 }
 
 
-
+/* Dada una colección c y un valor sup, si queda algún elemento por visitar en la colección c modifica val con
+ * el valor del elemento visitado y devuelve TRUE en forma de booleano. En caso contrario devuelve FALSE. 
+*/
 template<typename I,typename V>
-bool siguienteVal(colecInterdep<I,V>& c, V& val){	//no definida si existe siguiente
+bool siguienteVal(colecInterdep<I,V>& c, V& val){
 	if(existeSiguiente(c)){
 		val = c.itr -> valor;
 		return true;
@@ -641,9 +721,11 @@ bool siguienteVal(colecInterdep<I,V>& c, V& val){	//no definida si existe siguie
 }
 
 
-
+/* Dada una colección c, devuelve en forma de booleano TRUE si y solo si queda algún elemento por visitar en la
+ * colección c y dicho elemento es dependiente de otro. Devuelve FALSE si no se cumplen ambas condiciones.
+*/
 template<typename I,typename V>
-bool siguienteDependiente(colecInterdep<I,V>& c){	//no definida si existe siguiente
+bool siguienteDependiente(colecInterdep<I,V>& c){
 	if(existeSiguiente(c)){
 		return c.itr -> dep != nullptr;
 	}
@@ -653,8 +735,12 @@ bool siguienteDependiente(colecInterdep<I,V>& c){	//no definida si existe siguie
 }
 
 
+/* Dada una colección c y un valor sup, si queda algún elemento dependiente por visitar en la colección c modifica 
+ * sup con el identificador del elemento visitado y devuelve TRUE en forma de booleano. En caso de que no queden
+ * elemetos por visitar o que este sea independiente devuelve FALSE. 
+*/
 template<typename I,typename V>
-bool siguienteSuperior(colecInterdep<I,V>& c, I& sup){	//no definida si existe siguiente o es depend
+bool siguienteSuperior(colecInterdep<I,V>& c, I& sup){
 	if(siguienteDependiente(c)){
 		sup = c.itr -> dep -> ident;
 		return true;
@@ -665,8 +751,11 @@ bool siguienteSuperior(colecInterdep<I,V>& c, I& sup){	//no definida si existe s
 }
 
 
+/* Dada una colección c,  si queda algún elemento por visitar en la colección c devuelve el numero de elementos
+ * dependientes del elemento visitado. Devuelve -1 si no se quedan elementos por visitar.
+*/
 template<typename I,typename V>
-int siguienteNumDependientes(colecInterdep<I,V>& c){	//no definida si existe siguiente
+int siguienteNumDependientes(colecInterdep<I,V>& c){
 	if(existeSiguiente(c)){
 		return c.itr -> numDepend;
 	}
@@ -676,8 +765,12 @@ int siguienteNumDependientes(colecInterdep<I,V>& c){	//no definida si existe sig
 }
 
 
+/* Dada una colección c, devuelve en forma de booleano TRUE si existen elementos por visitar y hace que el iterador 
+ * avance para visitar el siguiente elemento de la colección, haciendo que el puntero itr pase a apuntar a su sig. 
+ * Devuelve FALSE en caso contrario y no avanza.
+*/
 template<typename I,typename V>
-bool avanza(colecInterdep<I,V>& c){	//no definida si existe siguiente
+bool avanza(colecInterdep<I,V>& c){
 	if(existeSiguiente(c)){
 		c.itr = c.itr -> sig;
 		return true;
