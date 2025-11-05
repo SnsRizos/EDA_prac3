@@ -32,8 +32,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 
 				f >> ident; 
 				getline(f,salto);
-				f >> info; 
-				getline(f,salto);
+				getline(f,info);
 				f >> prioridad; 
 				getline(f,salto);
 				f >> dependencia;
@@ -54,7 +53,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				}
 				if(dependencia == "INDependiente"){
 					s <<"[ "<<ident<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
-				}else if(dependencia =="INDependiente"){
+				}else if(dependencia =="DEPendiente"){
 					s <<"[ "<<ident<<"-de-> "<<super<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 				}
 						
@@ -62,8 +61,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			}else if( instruccion == "C"){ // CAMBIA EL VALOR DEL ID QUE NOS DA 
 				f >> ident;
 				getline(f,salto);
-				f >> info;
-				getline(f,salto);
+				getline(f,info);
 				f >> prioridad;
 				getline(f,salto);
 				crearEvento(info,prioridad,v);
