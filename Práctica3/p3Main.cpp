@@ -30,15 +30,13 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			
 			if(instruccion == "A"){//AÑADE UN NUEVO ID A LA MEMORIA
 
-				f >> ident; 
-				getline(f,salto);
+				getline(f,ident);
 				getline(f,info);
 				f >> prioridad; 
 				getline(f,salto);
 				f >> dependencia;
 				getline(f,salto);
-				f >> super;
-				getline(f,salto);
+				getline(f,super);
 				crearEvento(info,prioridad,v);
 				if(dependencia == "DEPendiente"){ 
 					anyadirDependiente(colec,ident,v,super); 
@@ -59,8 +57,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 						
 				
 			}else if( instruccion == "C"){ // CAMBIA EL VALOR DEL ID QUE NOS DA 
-				f >> ident;
-				getline(f,salto);
+				getline(f,ident);
 				getline(f,info);
 				f >> prioridad;
 				getline(f,salto);
@@ -81,8 +78,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 						s <<"NO CAMBIADO: "<< ident<<endl;
 					}
 			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION  DE ESE ID
-				f >> ident;
-				getline(f,salto);
+				getline(f,ident);
 	
 				if(obtenerVal(ident,colec,v)){
 					s <<"LOCALIZADO: ";
@@ -101,8 +97,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 
 				}
 			}else if(instruccion == "E"){//BUSCA SI EXISTE ESE IDENT
-				f >> ident;
-				getline(f,salto);
+				getline(f,ident);
 
 				if(existe(ident,colec)){
 					if(existeIndependiente(ident,colec)){
@@ -117,8 +112,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				s <<ident<<endl;
 			
 			}else if(instruccion =="I"){//HACE INDEPENDIENTE A ESE IDENT
-				f >> ident;
-				getline(f,salto);
+				getline(f,ident);
 			
 				if(existe(ident,colec)){
 					if(existeIndependiente(ident,colec)){
@@ -133,10 +127,8 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 					} 
 					s <<ident<<endl;
 			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE SUPER
-				f >> ident;
-				getline(f,salto);
-				f >> super;
-				getline(f,salto);
+				getline(f,ident);
+				getline(f,super);
 				
 				if(existe(ident,colec) && existe(super,colec)){
 						
@@ -149,8 +141,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				} 
 				s <<ident<<" -de-> "<<super<<endl;
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
-				f >> ident;
-				getline(f,salto);
+				getline(f,ident);
 				borrar(ident,colec);
 
 				if(!existe(ident,colec)){
@@ -162,8 +153,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				} 
 				s <<ident<<endl;	
 			}else if ( instruccion == "LD"){//RECORRER TODA LA colec CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
-				f >> ident;
-				getline(f,salto);
+				getline(f,ident);
 				
 				if(existe(ident,colec)){
 					s <<"****DEPENDIENTES: "<<ident<<endl;
