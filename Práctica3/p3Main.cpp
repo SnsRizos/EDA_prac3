@@ -52,7 +52,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				if(dependencia == "INDependiente"){
 					s <<"[ "<<ident<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 				}else if(dependencia =="DEPendiente"){
-					s <<"[ "<<ident<<"-de-> "<<super<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
+					s <<"[ "<<ident<<" -de-> "<<super<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 				}
 						
 				
@@ -142,10 +142,15 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				s <<ident<<" -de-> "<<super<<endl;
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
 				getline(f,ident);
-				borrar(ident,colec);
 
-				if(!existe(ident,colec)){
-					s <<"BORRADO: ";
+				if(existe(ident,colec)){
+					borrar(ident,colec);
+					if(!existe(ident,colec)){
+						s <<"BORRADO: ";
+					}
+					else{
+						s <<"NO BORRADO: ";
+					}
 						
 				}else{
 					s <<"NO BORRADO: ";
@@ -154,9 +159,8 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				s <<ident<<endl;	
 			}else if ( instruccion == "LD"){//RECORRER TODA LA colec CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
 				getline(f,ident);
-				
+				s <<"****DEPENDIENTES: "<<ident<<endl;
 				if(existe(ident,colec)){
-					s <<"****DEPENDIENTES: "<<ident<<endl;
 					obtenerVal(ident,colec,v);
 					info=descripcion(v);
 					prioridad=suPrioridad(v);
