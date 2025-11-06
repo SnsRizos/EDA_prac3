@@ -340,6 +340,7 @@ template<typename I,typename V>
 bool existeIndependiente(const I& id, colecInterdep<I,V>& c){
 	bool encontrado = false;
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
+	// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
 	while(pAux!=nullptr && pAux -> ident < id){
 		pAux = pAux -> sig;
 	}
@@ -357,7 +358,7 @@ bool existeIndependiente(const I& id, colecInterdep<I,V>& c){
 */
 template<typename I,typename V>
 void anyadirIndependiente(colecInterdep<I,V>& c, const I& id, const V& v){
-	if(c.prim==nullptr){	//es vacia
+	if(c.prim==nullptr){	//1er caso: es vacia
 		c.prim = new typename colecInterdep<I,V>::Celda;
 		c.prim -> ident = id;
 		c.prim -> valor = v;
@@ -367,7 +368,7 @@ void anyadirIndependiente(colecInterdep<I,V>& c, const I& id, const V& v){
 		c.tam = 1;
 	}
 	else{
-		if(c.prim -> ident > id){	//anyadir al principio
+		if(c.prim -> ident > id){	//2o caso: anyadir al principio
 			typename colecInterdep<I,V>::Celda* pAux = c.prim;
 			c.prim = new typename colecInterdep<I,V>::Celda;
 			c.prim -> ident = id;
@@ -377,12 +378,13 @@ void anyadirIndependiente(colecInterdep<I,V>& c, const I& id, const V& v){
 			c.prim -> sig = pAux;
 			c.tam++;
 		}
-		else{		//general (entre 2 interdep o al final)
+		else{		//Caso general: entre 2 interdep o al final
 			typename colecInterdep<I,V>::Celda* pAux = c.prim;
 			while(pAux -> sig != nullptr && (pAux -> sig -> ident < id)){
 				pAux = pAux -> sig;
 			}
-			if(pAux->sig == nullptr || pAux -> sig -> ident != id){ //Si no existe
+			// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
+			if(pAux->sig == nullptr || pAux -> sig -> ident != id){  //Si no existe elemento con mismo id lo añado
 				typename colecInterdep<I,V>::Celda* pNuevo;
 				pNuevo = new typename colecInterdep<I,V>::Celda;
 				pNuevo -> ident = id;
@@ -399,18 +401,23 @@ void anyadirIndependiente(colecInterdep<I,V>& c, const I& id, const V& v){
 
 
 
-
+/* Si no se encuentra un elemento con identificador id en la colección y existe un elemento con identificador super 
+ * devuelve el resultante de añadir el elemento dependiente (id,v,super,0) a la colección c e incrementar en 1 el 
+ * número de elementos dependientes del elemento con identificador super. En caso de que exista un elemento con tal 
+ * identificador o no exista un elemento con identificador super devuelve una colección igual a c sin modificar.
+*/
 template<typename I,typename V>
 void anyadirDependiente(colecInterdep<I,V>& c, const I& id, const V& v, const I& super){
-	if(!esVacia(c)){	
-		if(c.prim -> ident > id){	//anyadir al principio
+	if(!esVacia(c)){	//Como tiene que tener super la colección tiene que tener algún elemento
+		if(c.prim -> ident > id){	//1er caso: añadir al principio
 			typename colecInterdep<I,V>::Celda* pSup = c.prim;
+			// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
 			while(pSup != nullptr && pSup -> ident < super){
 				pSup = pSup -> sig;
 			}
 
 			if(pSup != nullptr && pSup -> ident == super){		//Si existe super
-				pSup -> numDepend = pSup -> numDepend+1;	//Sumar depend de super
+				pSup -> numDepend = pSup -> numDepend+1;	//Sumar numDepend de super
 
 				typename colecInterdep<I,V>::Celda* pAux = c.prim;
 				c.prim = new typename colecInterdep<I,V>::Celda;
@@ -423,14 +430,14 @@ void anyadirDependiente(colecInterdep<I,V>& c, const I& id, const V& v, const I&
 			}
 		}
 
-		else if(c.prim -> ident != id){		//general (entre 2 interdep o al final)
+		else if(c.prim -> ident != id){		//Caso: general: entre 2 interdep o al final
 			typename colecInterdep<I,V>::Celda* pAux = c.prim;
 			typename colecInterdep<I,V>::Celda* pSup = nullptr;
 			typename colecInterdep<I,V>::Celda* pId = nullptr;
-			bool encontradoS = false;
-			bool idNuevo = true;
-			bool pararId = false;
-			while ( (!encontradoS || !pararId) && (pAux != nullptr) ) {
+			bool encontradoS = false;	//Indica si se ha encontrado el superior
+			bool idNuevo = true;	//Indica si el id es nuevo, es decir no existe
+			bool pararId = false;	//Indica si se ha encontrado el hueco para id
+			while ( (!encontradoS || !pararId) && (pAux != nullptr) ) { //Se detiene al encontrar ambos o llegar al final de la colec 
 				if(pAux->ident < id){
 					pId = pAux;
 				}
@@ -450,7 +457,7 @@ void anyadirDependiente(colecInterdep<I,V>& c, const I& id, const V& v, const I&
 			
 			}
 				
-			if(idNuevo && encontradoS){ //Si no existe id y existe super
+			if(idNuevo && encontradoS){ //Si no existe id y existe super lo añadimos
 				pSup -> numDepend = pSup -> numDepend+1;
 				
 				typename colecInterdep<I,V>::Celda* pNuevo;
@@ -469,7 +476,13 @@ void anyadirDependiente(colecInterdep<I,V>& c, const I& id, const V& v, const I&
 
 
 
-
+/* Si existe un elemento con identificador id en la colección c y existe un elemento con identificador super incrementa
+ * en 1 el el número de elementos dependientes del elemento con identificador super y hace dependiente al elemento
+ * con identificador id del de super (apuntando con dep a super). En caso de que el elemento con identificador id dependiese 
+ * de otro elemento previamente, decrementa en 1 el numero de elementos dependientes de dicho elemento del que dependia. Si no 
+ * existe un elemento con el identificador id en la colección o no existe un elemento con identificador super devuelve una colección
+ * igual a c sin modificar.
+*/
 template<typename I,typename V>
 void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 
@@ -477,9 +490,9 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 		typename colecInterdep<I,V>::Celda* pAux = c.prim;
 		typename colecInterdep<I,V>::Celda* pSuper = nullptr;
 		typename colecInterdep<I,V>::Celda* pId = nullptr;
-		bool encontradoS = false;
-		bool encontradoId = false;
-   		while ( (!encontradoS || !encontradoId) || (pAux != nullptr) ) {
+		bool encontradoS = false; //Indica si se encuentra super
+		bool encontradoId = false; //Indica si se encuentra id
+   		while ( (!encontradoS || !encontradoId) || (pAux != nullptr) ) { //Para cuando se hayan encontrado ambos o se llegue al final de la colección
 			if(pAux->ident == id ){
 				encontradoId=true;
 				pId = pAux;
@@ -493,7 +506,7 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 			
 		}
 	
-		if(encontradoS && encontradoId){
+		if(encontradoS && encontradoId){	//Si ambos se encuentran hace al elemento con id, dependiente de sup
 			pSuper->numDepend++;
 			if(pId->dep != nullptr){
 				pId->dep->numDepend--;
@@ -509,7 +522,11 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 
 
 
-
+/* Si existe un elemento con identificador id en la colección c y este es dependiente de otro elemento decrementa 
+ * en 1 el número de elementos dependientes del elemento del que dependía y hacer independiente el elemento con identificador 
+ * id (haciendo que su puntero a dep sea igual a nullptr). Si no existe un elemento con el identificador id en la colección 
+ * o este ya era un elemento con independiente super devuelve una colección igual a c sin modificar.
+*/
 template<typename I,typename V>
 void hacerIndependiente(colecInterdep<I,V>& c, const I& id){
 	typename colecInterdep<I,V>::Celda* pId = c.prim;
