@@ -13,22 +13,25 @@ using namespace std;
  (descripción, prioridad) siendo la descripción una cadena y la prioridad un número natural.}
 */
 struct evento;
-/* Dada una cadena nombre, un entero cantidad, 
-devuelve un producto p con esos datos. 
+/* Dada una cadena descripcion, un entero prioridad, 
+devuelve un evento e con esos datos. 
 */
 void crearEvento(string descrip,int prio, evento& e);
 
-/* Dado un producto p, devuelve la cadena correspondiente al nombre de p. 
+/* Dado un evento e, devuelve la cadena correspondiente a la descripción de e. 
 */
 string descripcion(const evento& e);
 
-/* Dado un producto p, devuelve el entero correspondiente cantidad de p. 
+/* Dado un evento e y una cadena nueva, devuelve el evento e sustituyendo su antigua descripcion por nuevo. 
 */
 void cambiarDescripcion( evento& e,string nuevo);
 
-/* Devuelve verdad si y sólo si los productos p1 y p2 tienen el mismo nombre. 
+/* Dado un evento e, devuelve el entero correspondiente a la prioridad del evento e 
 */
 int suPrioridad(const evento& e);
+
+/* Dado un evento e y una entero pri, devuelve el evento e sustituyendo su antigua prioridad por pri. 
+*/
 void cambiarPrioridad(evento& e, int pri); 
 
 
@@ -41,8 +44,9 @@ struct evento {
   	friend void cambiarDescripcion( evento& e,string nuevo);
   	friend int suPrioridad(const evento& e);
 	friend void cambiarPrioridad(evento& e, int pri); 
-  private:  //declaracion de la representacion interna del tipo
-            //... a completar COMPLETAR CON documentacion sobre la representacion interna ...
+  private:  //La estructura se compone de descrip y prio:
+			//-descrip:es una cadena que tendra la información entorno al evento
+			//-prio: es un entero que tendra la prioridad del evento.
     string descrip;
     int prio;
 };

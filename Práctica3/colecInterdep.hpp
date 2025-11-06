@@ -248,7 +248,7 @@ struct colecInterdep{
     //CAMPOS ITERADOR
 	Celda* itr;
 };
-
+	
 
 
 //OPERACIONES
