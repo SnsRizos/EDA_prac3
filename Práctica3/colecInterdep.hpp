@@ -589,7 +589,7 @@ int obtenerNumDependientes(const I& id, colecInterdep<I,V>& c){
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
 	while(pAux!=nullptr && pAux -> ident < id){
 		pAux = pAux -> sig;
-	}
+	}	
 	if(pAux!=nullptr && pAux -> ident == id){
 		return pAux -> numDepend;
 	}
