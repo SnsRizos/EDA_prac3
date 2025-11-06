@@ -530,11 +530,12 @@ void hacerDependiente(colecInterdep<I,V>& c, const I& id, const I& super){
 template<typename I,typename V>
 void hacerIndependiente(colecInterdep<I,V>& c, const I& id){
 	typename colecInterdep<I,V>::Celda* pId = c.prim;
+	// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
    	while (pId != nullptr && pId ->ident < id ){
  		pId = pId->sig;
 	}
-	if(pId != nullptr && pId->ident == id){
-		if(pId->dep!=nullptr){
+	if(pId != nullptr && pId->ident == id){ //Si encuentra el elemento
+		if(pId->dep!=nullptr){	//Si el elemento dependia de otro, si no no hay que hacer nada
 			pId->dep->numDepend--;
 			pId->dep=nullptr;
 		}
@@ -545,14 +546,18 @@ void hacerIndependiente(colecInterdep<I,V>& c, const I& id){
 
 
 
-
+/* Si existe un elemento con el identificador id en la colección c actualiza el valor del puntero que apunta a valor valor
+ * por el de nuevo y devuelve en forma de booleano TRUE si y solo si se ha actualizado correctamente. Devuelve FALSE si no 
+ * se ha podido actualizar por la inexistencia del elemento.
+*/
 template<typename I,typename V>
 bool actualizarVal(colecInterdep<I,V>& c, const I& id, const V& nuevo){
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
+	// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
 	while(pAux!=nullptr && pAux -> ident < id){
 		pAux = pAux -> sig;
 	}
-	if(pAux!=nullptr && pAux -> ident == id){
+	if(pAux!=nullptr && pAux -> ident == id){ // Si lo encuentra cambia valor
 			pAux -> valor = nuevo;
 			return true;
 	}
@@ -562,14 +567,18 @@ bool actualizarVal(colecInterdep<I,V>& c, const I& id, const V& nuevo){
 }
 
 
-
+/* Si existe un elemento con identificador id en la colección c le proporciona a val el valor v del elemento y devuelve 
+ * en forma de booleano TRUE si y solo si el valor val se ha actualizado correctamente con el valor del puntero del elemento
+ * que apunta a valor. Devuelve FALSE si no se ha podido actualizar por la inexistencia del elemento en la colección.
+*/
 template<typename I,typename V>
-bool obtenerVal(const I& id, colecInterdep<I,V>& c, V& val){	//existeDependiente(id, c)||existeIndependiente(id, c)
+bool obtenerVal(const I& id, colecInterdep<I,V>& c, V& val){	
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
+	// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
 	while(pAux!=nullptr && pAux -> ident < id){
 		pAux = pAux -> sig;
 	}
-	if(pAux!=nullptr && pAux -> ident == id){
+	if(pAux!=nullptr && pAux -> ident == id){ //Si lo encuentra obtiene valor
 		val = pAux -> valor;
 		return true;
 	}
@@ -579,15 +588,20 @@ bool obtenerVal(const I& id, colecInterdep<I,V>& c, V& val){	//existeDependiente
 }
 
 
-
+/* Si existe un elemento con identificador id en la colección le proporciona a sup el identificador del elemento del 
+ * que depende el elemento con identidicador id, obtenido con el puntero que apunta a dep->ident y devuelve en forma de 
+ * booleano TRUE si y solo si el identificador sup se ha actualizado correctamente. Devuelve FALSE si no se ha podido 
+ * actualizar por la inexistencia del elemento.
+*/
 template<typename I,typename V>
 bool obtenerSupervisor(const I& id, colecInterdep<I,V>& c, I& sup){
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
+	// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
 	while(pAux!=nullptr && pAux -> ident < id){
 		pAux = pAux -> sig;
 	}
-	if(pAux!=nullptr && pAux -> ident == id){
-		if(pAux ->dep != nullptr){
+	if(pAux!=nullptr && pAux -> ident == id){ //Si existe el elemento
+		if(pAux ->dep != nullptr){	//Si es dependiente
 			sup = pAux ->dep->ident;
 			return true;
 		}
@@ -601,6 +615,9 @@ bool obtenerSupervisor(const I& id, colecInterdep<I,V>& c, I& sup){
 }
 
 
+/* Si existe un elemento con identificador id en la colección c devuelve en forma de entero el numero de elementos que 
+ * dependen del elemento obtenido con el puntero que apunta a numDepend. Devuelve -1 si existe tal elemento en la coleccion c.
+*/
 template<typename I,typename V>
 int obtenerNumDependientes(const I& id, colecInterdep<I,V>& c){
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
@@ -616,9 +633,14 @@ int obtenerNumDependientes(const I& id, colecInterdep<I,V>& c){
 }
 
 
-
-
-
+/* Si existe un elemento con identificador id en la colección le proporciona a val el valor v del elemento (obtenido con 
+ * el puntero que apunta a valor) y a numDep el número de elementos que dependen de este (obtenido con el puntero que 
+ * apunta a numDepend). Si el elemento es dependiente de otro le proporciona a sup el identificador del elemento del que
+ * depende (obtenido con el puntero que apunta a dep->ident) y le asigna al booleano depende TRUE. Si este elemento es 
+ * independiente sup no se modifica y le asigna al booleano depende FALSE.
+ * La función devuelve en forma de booleano TRUE si y solo si se ha encontrado el elemento y, por tanto, se ha podido obtener 
+ * estos datos. Devuelve FALSE en caso contrario.
+*/
 template<typename I,typename V> bool obtenerDatos(const I& id, colecInterdep<I,V>& c, V& val, I& sup, int& numDep, bool& depende){
 	typename colecInterdep<I,V>::Celda* pAux = c.prim;
 	while(pAux!=nullptr && pAux -> ident < id){
@@ -644,14 +666,19 @@ template<typename I,typename V> bool obtenerDatos(const I& id, colecInterdep<I,V
 }
 
 
-
+/* Si existe un elemento con el identificador id en la colección c y no tiene elementos dependientes (numDepend es 0) 
+ * devuelve la colección resultante de eliminar el elemento de la colección c. Si este elemento es dependiente además 
+ * decrementa en 1 el numero de elementos dependientes del que este dependía. Si este elemento se elimina se libera su
+ * información en memoria mediante tras haber reestructurado correctamente la colección.
+ * Si el elemento no existe devuelve la misma colección c sin modificar.
+*/
 template<typename I ,typename V>
 void borrar(const I& id, colecInterdep<I,V>& c){
 	typename colecInterdep<I,V>::Celda* pAux1;
 	typename colecInterdep<I,V>::Celda* pAux2;
 	bool parar;
 	if(!esVacia(c)){
-			if(c.prim->ident == id && c.prim->numDepend == 0){
+			if(c.prim->ident == id && c.prim->numDepend == 0){ //1er caso: se encuentra al principio
 				pAux1=c.prim;
 				c.prim=c.prim->sig;
 				if(pAux1->dep != nullptr){
@@ -660,15 +687,15 @@ void borrar(const I& id, colecInterdep<I,V>& c){
 				delete pAux1;
 				c.tam--;
 
-			}else{
+			}else{	//Caso general: entre 2 elementos o al final
 				parar = false;
 				pAux1=c.prim->sig;
 				pAux2=c.prim;
 				while(pAux1 != nullptr && !parar){	
-					if(id<pAux1->ident){
+					if(id<pAux1->ident){ //Parar si id es menor al identificador del elemento
 						parar=true;
 	
-					}else if( id == pAux1->ident && pAux1->numDepend == 0 ){
+					}else if( id == pAux1->ident && pAux1->numDepend == 0 ){ //Si se encuentra y no dependen otros elementos de este
 						if(pAux1->dep != nullptr){
 							pAux1->dep->numDepend--;
 						}
@@ -677,7 +704,7 @@ void borrar(const I& id, colecInterdep<I,V>& c){
 						parar=true;
 						c.tam--;
 	
-					}else{
+					}else{	//Avanzar mientras no se encuentre o se pare
 						pAux2=pAux1;
 						pAux1=pAux1->sig;
 					}
