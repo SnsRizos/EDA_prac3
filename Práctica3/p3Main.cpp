@@ -39,13 +39,14 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				getline(f,salto);
 				getline(f,super);
 				crearEvento(info,prioridad,v);
+				int tam = tamanyo(colec);
 				if(dependencia == "DEPendiente"){ 
 					anyadirDependiente(colec,ident,v,super); 
 				}else if(dependencia =="INDependiente"){
 					anyadirIndependiente(colec,ident,v);
 				}
 				
-				if(existe(ident,colec)){
+				if(tam!=tamanyo(colec)){
 					s <<"INTRODUCIDO: ";
 				}else{
 					s <<"NO INTRODUCIDO: ";
