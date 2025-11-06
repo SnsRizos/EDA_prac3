@@ -66,7 +66,7 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				
 					if(actualizarVal(colec,ident,v)){
 						s <<"CAMBIADO: ";
-						obtenerDatos(ident,colec,super,v,numDepends,depende);
+						obtenerDatos(ident,colec,v,super,numDepends,depende);
 						if(!depende){
 							s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
