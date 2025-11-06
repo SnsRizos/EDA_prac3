@@ -23,8 +23,9 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			int    prioridad;
 			string dependencia;
 			string super;
-			int numDepends;//Si da problemas alguna funcion darle a esto valor 0 al principio
-
+			int numDepends;
+			bool depende;
+				
 			while(f >> instruccion){
 			getline(f,salto);
 			
@@ -65,12 +66,11 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 				
 					if(actualizarVal(colec,ident,v)){
 						s <<"CAMBIADO: ";
-						numDepends =obtenerNumDependientes(ident,colec);
-						if(existeIndependiente(ident,colec)){
+						obtenerDatos(ident,colec,super,v,numDepends,depende);
+						if(!depende){
 							s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 						}else{
-							obtenerSupervisor(ident,colec,super);
 							s <<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<	numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 						}
@@ -79,17 +79,15 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 					}
 			}else if( instruccion == "O"){//MUESTRA TODA LA INFORMACION  DE ESE ID
 				getline(f,ident);
-	
-				if(obtenerVal(ident,colec,v)){
+				
+				if(obtenerDatos(ident,colec,v,super,numDepends,depende)){
 					s <<"LOCALIZADO: ";
 					info=descripcion(v);
 					prioridad=suPrioridad(v);
-					numDepends =obtenerNumDependientes(ident,colec);
-					if(existeIndependiente(ident,colec)){
+					if(!depende){
 						s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 
 					}else{
-						obtenerSupervisor(ident,colec,super);
 						s <<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" )"<<endl;
 					}
 				}else{
@@ -121,11 +119,11 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 						hacerIndependiente(colec,ident);
 						s <<"INDEPENDIZADO: ";
 					}
-					}else{
+				}else{
 						s <<"NO INDEPENDIZADO: ";
 
-					} 
-					s <<ident<<endl;
+				} 
+				s <<ident<<endl;
 			}else if(instruccion == "D"){//HACE DEPENDIENTE AL IDENT DE SUPER
 				getline(f,ident);
 				getline(f,super);
@@ -143,33 +141,26 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 			}else if (instruccion == "B"){//BORRA DE LA COLECCION EL ID
 				getline(f,ident);
 
-				if(existe(ident,colec)){
+					int tam=tamanyo(colec);
 					borrar(ident,colec);
-					if(!existe(ident,colec)){
+					if(tam != tamanyo(colec)){
 						s <<"BORRADO: ";
 					}
 					else{
 						s <<"NO BORRADO: ";
-					}
-						
-				}else{
-					s <<"NO BORRADO: ";
-
-				} 
-				s <<ident<<endl;	
+					} 
+					s <<ident<<endl;	
 			}else if ( instruccion == "LD"){//RECORRER TODA LA colec CON EL ITERADOR Y CUANDO UNO DEPENDA DEL SUPER QUE NOS DEN IMPRIMIR SUS DATOS
 				getline(f,ident);
 				s <<"****DEPENDIENTES: "<<ident<<endl;
-				if(existe(ident,colec)){
-					obtenerVal(ident,colec,v);
+				if(obtenerDatos(ident,colec,v,super,numDepends,depende)){
 					info=descripcion(v);
 					prioridad=suPrioridad(v);
-					numDepends =obtenerNumDependientes(ident,colec);
+					
 
-					if(existeIndependiente(ident,colec)){
+					if(!depende){
 						s <<"[ "<<ident<<" --- "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
 					}else{
-						obtenerSupervisor(ident,colec,super);
 						s <<"[ "<<ident<<" -de-> "<<super<<" ;;; "<<numDepends<<" ] --- "<<info<<" --- ( "<<prioridad<<" ) ****"<<endl;
 					}
 					iniciarIterador(colec);
@@ -244,79 +235,5 @@ void leerInstrucciones(colecInterdep<string,evento>colec){
 int main(){
 	colecInterdep<string,evento> bolsa;
 	crear(bolsa);
-	/*evento e1, e2, e3, e4, e5;
-	crearEvento("pepe",1, e1);
-	string dato = descripcion(e1);
-	cout << dato << endl;
-	cambiarDescripcion(e1,"yets");
-	dato = descripcion(e1);
-	cout << dato << "\n\n";
-	string id1 = "aaaa";
-	crearEvento("nuevo",1, e2);
-	crearEvento("dela",1, e3);
-	crearEvento("todos",1, e4);
-	crearEvento("fiji",1, e5);
-	string id2 = "cccc";
-	string id3 = "bbbb";
-	string super;
-
-	colecInterdep<string,evento> bolsa;
-	crear(bolsa);
-	if(esVacia(bolsa)){
-		cout << "yets\n";
-	}
-	cout << tamanyo(bolsa) << endl;
-	anyadirIndependiente(bolsa,id1,e1);
-	cout << tamanyo(bolsa) << endl;
-	anyadirIndependiente(bolsa,id2,e2);
-	anyadirDependiente(bolsa,id3,e2,id2);
-	cout << tamanyo(bolsa) << endl;
-
-	cout << obtenerSupervisor(id3, bolsa,super) << endl;//Modificado por Mijayl
-
-	if(existeDependiente(id1, bolsa)){
-		cout << "Existe\n";
-	}
-	else{
-		cout << "No existe\n";
-	}
-	cout << obtenerNumDependientes(id2, bolsa) << endl;
-	hacerDependiente(bolsa, id1, id2);
-	if(existeDependiente(id1, bolsa)){
-		cout << "Existe\n";
-	}
-	else{
-		cout << "No existe\n";
-	}
-	cout << obtenerNumDependientes(id2, bolsa) << endl;
-	hacerIndependiente(bolsa, id1);
-	if(existeDependiente(id1, bolsa)){
-		cout << "Existe\n";
-	}
-	else{
-		cout << "No existe\n";
-	}
-	cout << obtenerNumDependientes(id2, bolsa) << endl;
-
-	if(existe(id3,bolsa)){
-		cout << "Existe id\n";
-	}
-	else{
-		cout << "No existe id\n";
-	}
-	borrar(id3,bolsa);
-
-	cout << obtenerNumDependientes(id2, bolsa) << endl;
-
-	if(existe(id3,bolsa)){
-		cout << "Existe id\n";
-	}
-	else{
-		cout << "No existe id\n";
-	}
-
-	if(!esVacia(bolsa)){
-		cout << "notch\n";
-	}*/
 	leerInstrucciones(bolsa);
 }
