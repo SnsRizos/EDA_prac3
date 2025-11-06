@@ -121,8 +121,8 @@ template<typename I,typename V> int obtenerNumDependientes(const I& id, colecInt
 /* Si existe un elemento con identificador id en la colección le proporciona a val el valor v del elemento y a numDep el
  * número de elementos que dependen de este. Si el elemento es dependiente de otro le proporciona a sup el identificador 
  * del elemento del que depende y le asigna al booleano depende TRUE. Si este elemento es independiente sup no se modifica
- * y le asigna al booleano depende TRUE
- * La funcón evuelve en forma de booleano TRUE si y solo si se ha encontrado el elemento y, por tanto, se ha podido obtener 
+ * y le asigna al booleano depende FALSE.
+ * La función devuelve en forma de booleano TRUE si y solo si se ha encontrado el elemento y, por tanto, se ha podido obtener 
  * estos datos. Devuelve FALSE en caso contrario.
 */
 template<typename I,typename V> bool obtenerDatos(const I& id, colecInterdep<I,V>& c, V& val, I& sup, int& numDep, bool& depende);
@@ -351,7 +351,10 @@ bool existeIndependiente(const I& id, colecInterdep<I,V>& c){
 
 
 
-
+/* Si no se encuentra un elemento con el identificador id en la colección c devuelve el resultante de añadir el elemento 
+ * independiente (id,v,-,0) a la colección c. En caso de que exista un elemento con tal identificador devuelve una
+ * igual a c sin modificar.
+*/
 template<typename I,typename V>
 void anyadirIndependiente(colecInterdep<I,V>& c, const I& id, const V& v){
 	if(c.prim==nullptr){	//es vacia
