@@ -15,7 +15,6 @@ A
 CHimchar
 orangután de fueguito
 69
-
 DEPendiente
 cyndaquil
 LT
@@ -115,7 +114,7 @@ LT
 B
 cyndaquil
 B
-CHimchar
+CHimcharQ
 I
 cyndaquil
 B
