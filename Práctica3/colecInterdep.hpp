@@ -367,36 +367,35 @@ void anyadirIndependiente(colecInterdep<I,V>& c, const I& id, const V& v){
 		c.prim -> sig = nullptr;
 		c.tam = 1;
 	}
-	else{
-		if(c.prim -> ident > id){	//2o caso: anyadir al principio
-			typename colecInterdep<I,V>::Celda* pAux = c.prim;
-			c.prim = new typename colecInterdep<I,V>::Celda;
-			c.prim -> ident = id;
-			c.prim -> valor = v;
-			c.prim -> dep = nullptr;
-			c.prim -> numDepend = 0;
-			c.prim -> sig = pAux;
-			c.tam++;
+	else if(c.prim -> ident > id){	//2o caso: anyadir al principio
+		typename colecInterdep<I,V>::Celda* pAux = c.prim;
+		c.prim = new typename colecInterdep<I,V>::Celda;
+		c.prim -> ident = id;
+		c.prim -> valor = v;
+		c.prim -> dep = nullptr;
+		c.prim -> numDepend = 0;
+		c.prim -> sig = pAux;
+		c.tam++;
+	}
+	else if(c.prim -> ident != id){		//Caso general: entre 2 interdep o al final
+		typename colecInterdep<I,V>::Celda* pAux = c.prim;
+		while(pAux -> sig != nullptr && (pAux->sig->ident < id)){
+			pAux = pAux -> sig;
 		}
-		else{		//Caso general: entre 2 interdep o al final
-			typename colecInterdep<I,V>::Celda* pAux = c.prim;
-			while(pAux -> sig != nullptr && (pAux -> sig -> ident < id)){
-				pAux = pAux -> sig;
-			}
-			// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
-			if(pAux->sig == nullptr || pAux -> sig -> ident != id){  //Si no existe elemento con mismo id lo añado
-				typename colecInterdep<I,V>::Celda* pNuevo;
-				pNuevo = new typename colecInterdep<I,V>::Celda;
-				pNuevo -> ident = id;
-				pNuevo -> valor = v;
-				pNuevo -> dep = nullptr;
-				pNuevo -> numDepend = 0;
-				pNuevo -> sig = pAux -> sig;
-				pAux -> sig = pNuevo;
-				c.tam++;		
-			}
+		// Recorremos mientras no se acabe la colección y el identificador actual sea menor que el buscado
+		if(pAux->sig == nullptr || pAux->sig->ident != id){  //Si no existe elemento con mismo id lo añado
+			typename colecInterdep<I,V>::Celda* pNuevo;
+			pNuevo = new typename colecInterdep<I,V>::Celda;
+			pNuevo -> ident = id;
+			pNuevo -> valor = v;
+			pNuevo -> dep = nullptr;
+			pNuevo -> numDepend = 0;
+			pNuevo -> sig = pAux -> sig;
+			pAux -> sig = pNuevo;
+			c.tam++;		
 		}
 	}
+
 }
 
 
